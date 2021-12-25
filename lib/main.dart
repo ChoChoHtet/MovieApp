@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:module_3_movies_app/pages/home_page.dart';
+import 'package:module_3_movies_app/pages/movies_detail_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      home: HomePage(),
+      home: MovieDetailPage(),
     );
   }
 }

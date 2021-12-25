@@ -8,12 +8,13 @@ import 'package:module_3_movies_app/viewItems/banner_view.dart';
 import 'package:module_3_movies_app/viewItems/best_actor_view.dart';
 import 'package:module_3_movies_app/viewItems/movie_view.dart';
 import 'package:module_3_movies_app/viewItems/show_case_view.dart';
+import 'package:module_3_movies_app/widgets/actors_and_creators_section_view.dart';
 import 'package:module_3_movies_app/widgets/see_more_text.dart';
 import 'package:module_3_movies_app/widgets/title_text.dart';
 import 'package:module_3_movies_app/widgets/title_with_see_more_text.dart';
 
 class HomePage extends StatelessWidget {
-  List<String> genreList = [
+  final List<String> genreList = [
     "ACTION",
     "ADVENTURE",
     "CRIMINAL",
@@ -64,7 +65,10 @@ class HomePage extends StatelessWidget {
               SizedBox(
                 height: MARGIN_LARGE,
               ),
-              BestActorSection(),
+              ActorsAndCreatorsSectionView(
+                BEST_ACTOR_TITLE,
+                BEST_ACTOR_SEE_MORE,
+              ),
             ],
           ),
         ),
@@ -89,7 +93,7 @@ class GenreSectionView extends StatelessWidget {
             child: TabBar(
               isScrollable: true,
               indicatorColor: PLAY_BUTTON_COLOR,
-              unselectedLabelColor:HOME_SCREEN_LIST_TITLE_COLOR ,
+              unselectedLabelColor: HOME_SCREEN_LIST_TITLE_COLOR,
               tabs: genreList
                   .map(
                     (genre) => Tab(
@@ -102,7 +106,7 @@ class GenreSectionView extends StatelessWidget {
         ),
         Container(
           color: PRIMARY_COLOR,
-          padding: EdgeInsets.only(top: MARGIN_MEDIUM_2,bottom: MARGIN_LARGE),
+          padding: EdgeInsets.only(top: MARGIN_MEDIUM_2, bottom: MARGIN_LARGE),
           child: HorizontalMoviesList(),
         ),
       ],
@@ -151,48 +155,6 @@ class MoviesShowTimesSection extends StatelessWidget {
             Icons.location_on_rounded,
             color: Colors.white,
             size: PLAY_BUTTON_SIZE,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class BestActorSection extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: PRIMARY_COLOR,
-      padding: EdgeInsets.only(top: MARGIN_MEDIUM_2,bottom: MARGIN_XXLARGE),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: MARGIN_MEDIUM,
-              horizontal: MARGIN_MEDIUM_2,
-            ),
-            child: TitleWithSeeMoreText(
-              BEST_ACTOR_TITLE,
-              BEST_ACTOR_SEE_MORE,
-            ),
-          ),
-          SizedBox(
-            height: MARGIN_MEDIUM,
-          ),
-          Container(
-            height: BEST_ACTOR_HEIGHT,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                  vertical: 0, horizontal: MARGIN_MEDIUM_2),
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  BestActorView(),
-                  BestActorView(),
-                  BestActorView(),
-                ],
-              ),
-            ),
           ),
         ],
       ),
