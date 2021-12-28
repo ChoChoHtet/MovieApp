@@ -15,37 +15,209 @@ class MovieDetailPage extends StatelessWidget {
     return Scaffold(
       body: Container(
         color: HOME_SCREEN_BACKGROUND_COLOR,
-        child: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[
-              MovieDetailsSliverAppView(),
-              SliverList(
-                  delegate: SliverChildListDelegate(<Widget>[
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: MARGIN_MEDIUM_2, horizontal: MARGIN_MEDIUM_2),
-                  child: TrailerSectionView(genreList),
-                ),
-                SizedBox(
-                  height: MARGIN_MEDIUM_2,
-                ),
-                ActorsAndCreatorsSectionView(
-                  MOVIES_DETAIL_ACTORS_TITLE,
-                  "",
-                  seeMoreButtonVisibility: false,
-                ),
-                ActorsAndCreatorsSectionView(
-                  MOVIES_DETAIL_CREATORS_TITLE,
-                  MOVIES_DETAIL_CREATORS_SEE_MORE,
-                ),
-              ]))
-            ];
-          },
-          body: Center(
-            child: Text("title"),
-          ),
+        // child: NestedScrollView(
+        //   headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+        //     return <Widget>[
+        //       MovieDetailsSliverAppView(() {
+        //         Navigator.pop(context);
+        //       }),
+        //       SliverList(
+        //           delegate: SliverChildListDelegate(<Widget>[
+        //             Container(
+        //               padding: const EdgeInsets.symmetric(
+        //                   vertical: MARGIN_MEDIUM_2,
+        //                   horizontal: MARGIN_MEDIUM_2),
+        //               child: TrailerSectionView(genreList),
+        //             ),
+        //             SizedBox(
+        //               height: MARGIN_MEDIUM_2,
+        //             ),
+        //             ActorsAndCreatorsSectionView(
+        //               MOVIES_DETAIL_ACTORS_TITLE,
+        //               "",
+        //               seeMoreButtonVisibility: false,
+        //             ),
+        //             SizedBox(
+        //               height: MARGIN_MEDIUM_2,
+        //             ),
+        //             Container(
+        //               padding: EdgeInsets.all(MARGIN_MEDIUM_2),
+        //               child: Column(
+        //                 crossAxisAlignment: CrossAxisAlignment.start,
+        //                 children: [
+        //                   TitleText("ABOUT FILM"),
+        //                   SizedBox(
+        //                     height: MARGIN_MEDIUM_2,
+        //                   ),
+        //                   AboutFilmInfoView(
+        //                     "Original Title:",
+        //                     "Fantastic Beasts and Where to find them",
+        //                   ),
+        //                   SizedBox(
+        //                     height: MARGIN_MEDIUM_2,
+        //                   ),
+        //                   AboutFilmInfoView(
+        //                     "Type:",
+        //                     "Family,Fantasy, Adventure",
+        //                   ),
+        //                   SizedBox(
+        //                     height: MARGIN_MEDIUM_2,
+        //                   ),
+        //                   AboutFilmInfoView(
+        //                     "Production:",
+        //                     "United Kingdom, USA",
+        //                   ),
+        //                   SizedBox(
+        //                     height: MARGIN_MEDIUM_2,
+        //                   ),
+        //                   AboutFilmInfoView(
+        //                     "Premiere:",
+        //                     "8 November 2016 ( World)",
+        //                   ),
+        //                   SizedBox(
+        //                     height: MARGIN_MEDIUM_2,
+        //                   ),
+        //                   AboutFilmInfoView(
+        //                     "Description:",
+        //                     "Arriving in New York for a brief stopover, he might have come and gone without incident, were it not for a No-Maj (American for Muggle) named Jacob, a misplaced magical case, and the escape of some of Newt's fantastic beasts, which could spell trouble for both the wizarding and No-Maj worlds.",
+        //                   ),
+        //                 ],
+        //               ),
+        //             ),
+        //             SizedBox(
+        //               height: MARGIN_MEDIUM_2,
+        //             ),
+        //             ActorsAndCreatorsSectionView(
+        //               MOVIES_DETAIL_CREATORS_TITLE,
+        //               MOVIES_DETAIL_CREATORS_SEE_MORE,
+        //             ),
+        //           ]))
+        //     ];
+        //   },
+        //   body: Center(
+        //     child: Text("title"),
+        //   ),
+        // ),
+        child: CustomScrollView(
+          slivers: [
+            MovieDetailsSliverAppView(() {
+              Navigator.pop(context);
+            }),
+            SliverList(
+                delegate: SliverChildListDelegate(<Widget>[
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: MARGIN_MEDIUM_2,
+                        horizontal: MARGIN_MEDIUM_2),
+                    child: TrailerSectionView(genreList),
+                  ),
+                  SizedBox(
+                    height: MARGIN_MEDIUM_2,
+                  ),
+                  ActorsAndCreatorsSectionView(
+                    MOVIES_DETAIL_ACTORS_TITLE,
+                    "",
+                    seeMoreButtonVisibility: false,
+                  ),
+                  SizedBox(
+                    height: MARGIN_MEDIUM_2,
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(MARGIN_MEDIUM_2),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TitleText("ABOUT FILM"),
+                        SizedBox(
+                          height: MARGIN_MEDIUM_2,
+                        ),
+                        AboutFilmInfoView(
+                          "Original Title:",
+                          "Fantastic Beasts and Where to find them",
+                        ),
+                        SizedBox(
+                          height: MARGIN_MEDIUM_2,
+                        ),
+                        AboutFilmInfoView(
+                          "Type:",
+                          "Family,Fantasy, Adventure",
+                        ),
+                        SizedBox(
+                          height: MARGIN_MEDIUM_2,
+                        ),
+                        AboutFilmInfoView(
+                          "Production:",
+                          "United Kingdom, USA",
+                        ),
+                        SizedBox(
+                          height: MARGIN_MEDIUM_2,
+                        ),
+                        AboutFilmInfoView(
+                          "Premiere:",
+                          "8 November 2016 ( World)",
+                        ),
+                        SizedBox(
+                          height: MARGIN_MEDIUM_2,
+                        ),
+                        AboutFilmInfoView(
+                          "Description:",
+                          "Arriving in New York for a brief stopover, he might have come and gone without incident, were it not for a No-Maj (American for Muggle) named Jacob, a misplaced magical case, and the escape of some of Newt's fantastic beasts, which could spell trouble for both the wizarding and No-Maj worlds.",
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: MARGIN_MEDIUM_2,
+                  ),
+                  ActorsAndCreatorsSectionView(
+                    MOVIES_DETAIL_CREATORS_TITLE,
+                    MOVIES_DETAIL_CREATORS_SEE_MORE,
+                  ),
+                ]))
+          ],
         ),
       ),
+    );
+  }
+}
+
+class AboutFilmInfoView extends StatelessWidget {
+  final String titleText;
+  final String descriptionText;
+
+  const AboutFilmInfoView(this.titleText, this.descriptionText);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: MediaQuery
+              .of(context)
+              .size
+              .width / 4,
+          child: Text(
+            titleText,
+            style: TextStyle(
+                fontSize: TEXT_REGULAR_2X,
+                color: MOVIES_DETAIL_FILM_INFO_TEXT_COLOR,
+                fontWeight: FontWeight.bold),
+          ),
+        ),
+        SizedBox(
+          width: MARGIN_CARD_MEDIUM_2,
+        ),
+        Expanded(
+          child: Text(
+            descriptionText,
+            style: TextStyle(
+                fontSize: TEXT_REGULAR_2X,
+                color: Colors.white,
+                fontWeight: FontWeight.w500),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -118,9 +290,9 @@ class MovieDetailButtonView extends StatelessWidget {
         borderRadius: BorderRadius.circular(MARGIN_XLARGE),
         border: isGhostButton
             ? Border.all(
-                color: Colors.white,
-                width: 2,
-              )
+          color: Colors.white,
+          width: 2,
+        )
             : null,
       ),
       child: Row(
@@ -201,7 +373,7 @@ class MoviesTimeAndGenreView extends StatelessWidget {
           children: genreList
               .map(
                 (genre) => GenreChipView(genre),
-              )
+          )
               .toList(),
         ),
         SizedBox(
@@ -245,11 +417,16 @@ class GenreChipView extends StatelessWidget {
 }
 
 class MovieDetailsSliverAppView extends StatelessWidget {
+  final Function onTapBack;
+
+  const MovieDetailsSliverAppView(this.onTapBack);
+
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
       floating: false,
       pinned: false,
+      automaticallyImplyLeading: false,
       backgroundColor: PRIMARY_COLOR,
       expandedHeight: MOVIE_DETAIL_SLIVER_APP_HEIGHT,
       flexibleSpace: FlexibleSpaceBar(
@@ -265,7 +442,7 @@ class MovieDetailsSliverAppView extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(
                     top: MARGIN_XLARGE, left: MARGIN_MEDIUM_2),
-                child: BackButtonView(),
+                child: BackButtonView(onTapBack),
               ),
             ),
             Align(
@@ -394,20 +571,24 @@ class SearchButtonView extends StatelessWidget {
 }
 
 class BackButtonView extends StatelessWidget {
-  const BackButtonView({
-    Key key,
-  }) : super(key: key);
+  final Function onTapBack;
+
+  const BackButtonView(this.onTapBack);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MARGIN_XXLARGE,
-      height: MARGIN_XXLARGE,
-      decoration: BoxDecoration(color: Colors.black54, shape: BoxShape.circle),
-      child: Icon(
-        Icons.chevron_left,
-        size: MARGIN_XLARGE,
-        color: Colors.white,
+    return GestureDetector(
+      onTap: onTapBack,
+      child: Container(
+        width: MARGIN_XXLARGE,
+        height: MARGIN_XXLARGE,
+        decoration: BoxDecoration(
+            color: Colors.black54, shape: BoxShape.circle),
+        child: Icon(
+          Icons.chevron_left,
+          size: MARGIN_XLARGE,
+          color: Colors.white,
+        ),
       ),
     );
   }
