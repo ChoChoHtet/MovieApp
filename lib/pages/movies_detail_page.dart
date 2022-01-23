@@ -234,7 +234,7 @@ class TrailerSectionView extends StatelessWidget {
       children: [
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          child: MoviesTimeAndGenreView(genreList: genreList),
+          child: MoviesTimeAndGenreView(genreList),
         ),
         SizedBox(
           height: MARGIN_MEDIUM_2,
@@ -315,9 +315,6 @@ class MovieDetailButtonView extends StatelessWidget {
 }
 
 class StoryLineView extends StatelessWidget {
-  const StoryLineView({
-    Key key,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -341,12 +338,10 @@ class StoryLineView extends StatelessWidget {
 }
 
 class MoviesTimeAndGenreView extends StatelessWidget {
-  const MoviesTimeAndGenreView({
-    Key key,
-    @required this.genreList,
-  }) : super(key: key);
+
 
   final List<String> genreList;
+  const MoviesTimeAndGenreView(this.genreList);
 
   @override
   Widget build(BuildContext context) {
@@ -529,9 +524,6 @@ class MovieDetailsInfoView extends StatelessWidget {
 }
 
 class MovieDetailsYearView extends StatelessWidget {
-  const MovieDetailsYearView({
-    Key key,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -556,9 +548,6 @@ class MovieDetailsYearView extends StatelessWidget {
 }
 
 class SearchButtonView extends StatelessWidget {
-  const SearchButtonView({
-    Key key,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -578,7 +567,9 @@ class BackButtonView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTapBack,
+      onTap: (){
+        onTapBack();
+      },
       child: Container(
         width: MARGIN_XXLARGE,
         height: MARGIN_XXLARGE,

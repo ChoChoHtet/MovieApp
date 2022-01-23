@@ -29,9 +29,6 @@ class ShowCaseView extends StatelessWidget {
 }
 
 class TitleAndDateView extends StatelessWidget {
-  const TitleAndDateView({
-    Key key,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -55,9 +52,6 @@ class TitleAndDateView extends StatelessWidget {
 }
 
 class ShowCaseImageView extends StatelessWidget {
-  const ShowCaseImageView({
-    Key key,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

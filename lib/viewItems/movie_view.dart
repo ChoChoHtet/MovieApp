@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:module_3_movies_app/data/vos/movie_vo.dart';
+import 'package:module_3_movies_app/network/api_constants.dart';
 import 'package:module_3_movies_app/resources/dimens.dart';
 import 'package:module_3_movies_app/widgets/rating_view.dart';
 
 class MovieView extends StatelessWidget {
  final Function onTapMovie;
-  const MovieView(this.onTapMovie);
+ final MovieVO? movie;
+  const MovieView(this.onTapMovie,this.movie);
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -16,9 +19,11 @@ class MovieView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               GestureDetector(
-                onTap: onTapMovie,
+                onTap:(){
+                 onTapMovie();
+                },
                 child: Image.network(
-                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfiriR-FHvLJPueRrAtOuoLpBV6noy2mtNxw&usqp=CAU",
+                "$IMAGES_BASE_URL${movie?.posterPath ?? ""}",
                   fit: BoxFit.cover,
                   height: 200,
                 ),
@@ -27,7 +32,7 @@ class MovieView extends StatelessWidget {
                 height: MARGIN_MEDIUM_2,
               ),
               Text(
-                "Westworld",
+               "${movie?.title ?? ""}",
                 style: TextStyle(
                     color: Colors.white, fontSize: 20, fontWeight: FontWeight.w600),
               ),

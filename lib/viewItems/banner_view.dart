@@ -28,9 +28,6 @@ class BannerView extends StatelessWidget {
 
 
 class BannerTitleView extends StatelessWidget {
-  const BannerTitleView({
-    Key key,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -57,10 +54,6 @@ class BannerTitleView extends StatelessWidget {
 }
 
 class BannerImageView extends StatelessWidget {
-  const BannerImageView({
-    Key key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Image.network(
