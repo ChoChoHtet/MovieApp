@@ -32,7 +32,7 @@ class MovieView extends StatelessWidget {
                 height: MARGIN_MEDIUM_2,
               ),
               Text(
-               "${movie?.title ?? ""}",
+               movie?.title ?? "",
                 style: TextStyle(
                     color: Colors.white, fontSize: 20, fontWeight: FontWeight.w600),
               ),

@@ -146,7 +146,7 @@ class GenreSectionView extends StatelessWidget {
           color: PRIMARY_COLOR,
           padding: EdgeInsets.only(top: MARGIN_MEDIUM_2, bottom: MARGIN_LARGE),
           child: HorizontalMoviesList(
-            onTapMovie,List.empty()
+            onTapMovie, movieList: List.empty(),
           ),
         ),
       ],
@@ -248,7 +248,7 @@ class BestPopularAndSerialView extends StatelessWidget {
         SizedBox(
           height: 16,
         ),
-        HorizontalMoviesList(onTapMovie, getNowPlayingMovies),
+        HorizontalMoviesList(onTapMovie,  movieList:getNowPlayingMovies,),
       ],
     );
   }
@@ -258,7 +258,7 @@ class HorizontalMoviesList extends StatelessWidget {
   final Function onTapMovie;
   final List<MovieVO>? movieList;
 
-  const HorizontalMoviesList(this.onTapMovie, this.movieList);
+  const HorizontalMoviesList(this.onTapMovie, {required this.movieList});
 
   @override
   Widget build(BuildContext context) {
