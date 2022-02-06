@@ -16,7 +16,7 @@ class _TheMovieApi implements TheMovieApi {
   String? baseUrl;
 
   @override
-  Future<GetNowPlayingResponse> getNowPlayingMovies(
+  Future<MovieListResponse> getNowPlayingMovies(
       apiKey, language, page) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
@@ -27,12 +27,12 @@ class _TheMovieApi implements TheMovieApi {
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<GetNowPlayingResponse>(
+        _setStreamType<MovieListResponse>(
             Options(method: 'GET', headers: _headers, extra: _extra)
                 .compose(_dio.options, '/3/movie/now_playing',
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = GetNowPlayingResponse.fromJson(_result.data!);
+    final value = MovieListResponse.fromJson(_result.data!);
     return value;
   }
 
