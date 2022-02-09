@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:module_3_movies_app/data/vos/actors_vo.dart';
+import 'package:module_3_movies_app/data/vos/genre_vo.dart';
 import 'package:module_3_movies_app/data/vos/movie_vo.dart';
 import 'package:module_3_movies_app/network/api_constants.dart';
 import 'package:module_3_movies_app/network/dataagents/movie_data_agent.dart';
@@ -18,6 +20,36 @@ class HttpMovieDataAgentImpl extends MovieDataAgent {
     }).catchError((error){
       debugPrint("Now Playing response:$error");
     });
+  }
+
+  @override
+  Future<List<ActorsVO>> getActors(int page) {
+    // TODO: implement getActors
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<GenreVO>?> getGenres() {
+    // TODO: implement getGenres
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<MovieVO>?> getMoviesByGenreId(int genreId) {
+    // TODO: implement getMoviesByGenreId
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<MovieVO>?> getPopularMovies(int page) {
+    // TODO: implement getPopularMovies
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<MovieVO>?> getTopRatedMovies(int page) {
+    // TODO: implement getTopRatedMovies
+    throw UnimplementedError();
   }
 
 }

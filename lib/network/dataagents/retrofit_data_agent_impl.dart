@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:module_3_movies_app/data/vos/actors_vo.dart';
+import 'package:module_3_movies_app/data/vos/genre_vo.dart';
 import 'package:module_3_movies_app/data/vos/movie_vo.dart';
 import 'package:module_3_movies_app/network/api_constants.dart';
 import 'package:module_3_movies_app/network/dataagents/movie_data_agent.dart';
@@ -25,6 +27,46 @@ class RetrofitDataAgentImpl extends MovieDataAgent {
   @override
   Future<List<MovieVO>?> getNowPlayingMovies(int page) {
     return movieApi.getNowPlayingMovies(API_KEY, LANGUAGE_EN_US, page.toString())
+        .asStream()
+        .map((response) => response.results)
+        .first ;
+  }
+
+  @override
+  Future<List<ActorsVO>?> getActors(int page) {
+   return movieApi.getActors(API_KEY, LANGUAGE_EN_US,page.toString())
+       .asStream()
+       .map((response) => response.results)
+       .first ;
+  }
+
+  @override
+  Future<List<GenreVO>?> getGenres() {
+    return movieApi.getGenres(API_KEY, LANGUAGE_EN_US)
+        .asStream()
+        .map((response) => response.genres)
+        .first ;
+  }
+
+  @override
+  Future<List<MovieVO>?> getMoviesByGenreId(int genreId) {
+    return movieApi.getMoviesByGenreId(API_KEY, LANGUAGE_EN_US, genreId.toString())
+        .asStream()
+        .map((response) => response.results)
+        .first ;
+  }
+
+  @override
+  Future<List<MovieVO>?> getPopularMovies(int page) {
+    return movieApi.getPopularMovies(API_KEY, LANGUAGE_EN_US, page.toString())
+        .asStream()
+        .map((response) => response.results)
+        .first ;
+  }
+
+  @override
+  Future<List<MovieVO>?> getTopRatedMovies(int page) {
+    return movieApi.getTopRatedMovies(API_KEY, LANGUAGE_EN_US, page.toString())
         .asStream()
         .map((response) => response.results)
         .first ;

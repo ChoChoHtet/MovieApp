@@ -33,6 +33,7 @@ class _HomePageState extends State<HomePage> {
   MovieModel _movieModel = MovieModelImpl();
 
   List<MovieVO>? getNowPlayingMovies;
+  List<MovieVO>? getPopularMovies;
 
   @override
   void initState() {
@@ -43,6 +44,14 @@ class _HomePageState extends State<HomePage> {
       });
     }).catchError((error) {
       debugPrint("Now Playing error: $error");
+    });
+    _movieModel.getPopularMovies().then((value){
+      setState(() {
+        getPopularMovies = value ;
+
+      });
+    }).catchError((error){
+      debugPrint("Popular error: $error");
     });
     super.initState();
   }

@@ -16,8 +16,7 @@ class _TheMovieApi implements TheMovieApi {
   String? baseUrl;
 
   @override
-  Future<MovieListResponse> getNowPlayingMovies(
-      apiKey, language, page) async {
+  Future<MovieListResponse> getNowPlayingMovies(apiKey, language, page) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'api_key': apiKey,
@@ -33,6 +32,106 @@ class _TheMovieApi implements TheMovieApi {
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = MovieListResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<MovieListResponse> getPopularMovies(apiKey, language, page) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'api_key': apiKey,
+      r'language': language,
+      r'page': page
+    };
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<MovieListResponse>(
+            Options(method: 'GET', headers: _headers, extra: _extra)
+                .compose(_dio.options, '3/movie/popular',
+                    queryParameters: queryParameters, data: _data)
+                .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = MovieListResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<MovieListResponse> getTopRatedMovies(apiKey, language, page) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'api_key': apiKey,
+      r'language': language,
+      r'page': page
+    };
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<MovieListResponse>(
+            Options(method: 'GET', headers: _headers, extra: _extra)
+                .compose(_dio.options, '3/movie/top_rated',
+                    queryParameters: queryParameters, data: _data)
+                .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = MovieListResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<MovieListResponse> getMoviesByGenreId(
+      apiKey, language, genreId) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'api_key': apiKey,
+      r'language': language,
+      r'genre_id': genreId
+    };
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<MovieListResponse>(
+            Options(method: 'GET', headers: _headers, extra: _extra)
+                .compose(_dio.options, '3/discover/movie',
+                    queryParameters: queryParameters, data: _data)
+                .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = MovieListResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<GetGenreResponse> getGenres(apiKey, language) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'api_key': apiKey,
+      r'language': language
+    };
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<GetGenreResponse>(
+            Options(method: 'GET', headers: _headers, extra: _extra)
+                .compose(_dio.options, '/3/movie/now_playing',
+                    queryParameters: queryParameters, data: _data)
+                .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = GetGenreResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<GetActorsResponse> getActors(apiKey, language, page) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'api_key': apiKey,
+      r'language': language,
+      r'page': page
+    };
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<GetActorsResponse>(
+            Options(method: 'GET', headers: _headers, extra: _extra)
+                .compose(_dio.options, '3/person/popular',
+                    queryParameters: queryParameters, data: _data)
+                .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = GetActorsResponse.fromJson(_result.data!);
     return value;
   }
 
