@@ -2,6 +2,8 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:module_3_movies_app/data/%20models/movie_model.dart';
 import 'package:module_3_movies_app/data/%20models/movie_model_impl.dart';
+import 'package:module_3_movies_app/data/vos/actors_vo.dart';
+import 'package:module_3_movies_app/data/vos/genre_vo.dart';
 import 'package:module_3_movies_app/data/vos/movie_vo.dart';
 import 'package:module_3_movies_app/pages/movies_detail_page.dart';
 import 'package:module_3_movies_app/resources/colors.dart';
@@ -34,6 +36,10 @@ class _HomePageState extends State<HomePage> {
 
   List<MovieVO>? getNowPlayingMovies;
   List<MovieVO>? getPopularMovies;
+  List<GenreVO>? getGenres;
+  List<MovieVO>? moviesByGenre;
+  List<ActorsVO>? actors;
+  List<MovieVO>? topRatedMovies;
 
   @override
   void initState() {
@@ -45,15 +51,51 @@ class _HomePageState extends State<HomePage> {
     }).catchError((error) {
       debugPrint("Now Playing error: $error");
     });
-    _movieModel.getPopularMovies().then((value){
+    _movieModel.getPopularMovies().then((value) {
       setState(() {
-        getPopularMovies = value ;
-
+        getPopularMovies = value;
       });
-    }).catchError((error){
+    }).catchError((error) {
       debugPrint("Popular error: $error");
     });
+    _movieModel.getGenres().then((value) {
+      debugPrint("Genre Response: ${value.toString()}");
+      setState(() {
+        getGenres = value;
+      });
+      _getMovieByGenreId(value?.first.id ?? 0);
+    }).catchError((error) {
+      debugPrint("Genre error: $error");
+    });
+    _movieModel.getTopRatedMovies().then((value) {
+      //refresh widget
+      debugPrint("Top Rated Response: ${value.toString()}");
+      setState(() {
+        topRatedMovies = value;
+      });
+    }).catchError((error) {
+      debugPrint("Top Rated error: $error");
+    });
+    _movieModel.getActors().then((value) {
+      //refresh widget
+      debugPrint("Actor Response: ${value.toString()}");
+      setState(() {
+        actors = value;
+      });
+    }).catchError((error) {
+      debugPrint("Now Playing error: $error");
+    });
     super.initState();
+  }
+
+  void _getMovieByGenreId(int genreId) {
+    _movieModel.getMoviesByGenreId(genreId).then((value) {
+      setState(() {
+        moviesByGenre = value;
+      });
+    }).catchError((error) {
+      debugPrint("Movies By  error: $error");
+    });
   }
 
   @override
@@ -77,7 +119,9 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              BannerSection(),
+              BannerSection(
+                movieList: getPopularMovies?.take(5).toList(),
+              ),
               SizedBox(
                 height: MARGIN_LARGE,
               ),
@@ -93,18 +137,27 @@ class _HomePageState extends State<HomePage> {
               ),
               GenreSectionView(
                 () => _navigatorPushToMovieDetailScreen(context),
-                genreList: genreList,
+                genreList: getGenres,
+                movieList: moviesByGenre,
+                onChooseGenre: (genreId) {
+                  if (genreId != null) {
+                    _getMovieByGenreId(genreId);
+                  }
+                },
               ),
               SizedBox(
                 height: MARGIN_LARGE,
               ),
-              ShowCasesSection(),
+              ShowCasesSection(
+                topRatedMovies: topRatedMovies,
+              ),
               SizedBox(
                 height: MARGIN_LARGE,
               ),
               ActorsAndCreatorsSectionView(
                 BEST_ACTOR_TITLE,
                 BEST_ACTOR_SEE_MORE,
+                actorList: actors,
               ),
             ],
           ),
@@ -124,10 +177,15 @@ class _HomePageState extends State<HomePage> {
 }
 
 class GenreSectionView extends StatelessWidget {
-  final List<String> genreList;
+  final List<GenreVO>? genreList;
+  final List<MovieVO>? movieList;
   final Function onTapMovie;
+  final Function(int?) onChooseGenre;
 
-  const GenreSectionView(this.onTapMovie, {required this.genreList});
+  const GenreSectionView(this.onTapMovie,
+      {required this.genreList,
+      required this.movieList,
+      required this.onChooseGenre});
 
   @override
   Widget build(BuildContext context) {
@@ -136,18 +194,22 @@ class GenreSectionView extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: MARGIN_MEDIUM_2),
           child: DefaultTabController(
-            length: genreList.length,
+            length: genreList?.length ?? 0,
             child: TabBar(
               isScrollable: true,
               indicatorColor: PLAY_BUTTON_COLOR,
               unselectedLabelColor: HOME_SCREEN_LIST_TITLE_COLOR,
               tabs: genreList
-                  .map(
-                    (genre) => Tab(
-                      child: Text(genre),
-                    ),
-                  )
-                  .toList(),
+                      ?.map(
+                        (genre) => Tab(
+                          child: Text(genre.name ?? ""),
+                        ),
+                      )
+                      .toList() ??
+                  [],
+              onTap: (index) {
+                onChooseGenre(genreList?[index].id);
+              },
             ),
           ),
         ),
@@ -155,7 +217,8 @@ class GenreSectionView extends StatelessWidget {
           color: PRIMARY_COLOR,
           padding: EdgeInsets.only(top: MARGIN_MEDIUM_2, bottom: MARGIN_LARGE),
           child: HorizontalMoviesList(
-            onTapMovie, movieList: List.empty(),
+            onTapMovie,
+            movieList: movieList,
           ),
         ),
       ],
@@ -208,6 +271,10 @@ class MoviesShowTimesSection extends StatelessWidget {
 }
 
 class ShowCasesSection extends StatelessWidget {
+  final List<MovieVO>? topRatedMovies;
+
+  ShowCasesSection({required this.topRatedMovies});
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -226,11 +293,10 @@ class ShowCasesSection extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             padding: EdgeInsets.symmetric(
                 vertical: MARGIN_MEDIUM, horizontal: MARGIN_MEDIUM_2),
-            children: [
-              ShowCaseView(),
-              ShowCaseView(),
-              ShowCaseView(),
-            ],
+            children: topRatedMovies
+                    ?.map((movie) => ShowCaseView(movie: movie))
+                    .toList() ??
+                [],
           ),
         ),
       ],
@@ -257,7 +323,10 @@ class BestPopularAndSerialView extends StatelessWidget {
         SizedBox(
           height: 16,
         ),
-        HorizontalMoviesList(onTapMovie,  movieList:getNowPlayingMovies,),
+        HorizontalMoviesList(
+          onTapMovie,
+          movieList: getNowPlayingMovies,
+        ),
       ],
     );
   }
@@ -273,24 +342,30 @@ class HorizontalMoviesList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: MOVIES_LIST_HEIGHT,
-      child: (movieList != null ) ? ListView.builder(
-        scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.only(left: MARGIN_MEDIUM_2),
-        itemCount: movieList?.length ?? 0,
-        itemBuilder: (BuildContext context, int index) {
-          return MovieView(
-            onTapMovie,
-            movieList?[index],
-          );
-        },
-      ) : Center(
-        child:CircularProgressIndicator() ,
-      ),
+      child: (movieList != null)
+          ? ListView.builder(
+              scrollDirection: Axis.horizontal,
+              padding: EdgeInsets.only(left: MARGIN_MEDIUM_2),
+              itemCount: movieList?.length ?? 0,
+              itemBuilder: (BuildContext context, int index) {
+                return MovieView(
+                  onTapMovie,
+                  movieList?[index],
+                );
+              },
+            )
+          : Center(
+              child: CircularProgressIndicator(),
+            ),
     );
   }
 }
 
 class BannerSection extends StatefulWidget {
+  final List<MovieVO>? movieList;
+
+  const BannerSection({@required this.movieList});
+
   @override
   _BannerSectionState createState() => _BannerSectionState();
 }
@@ -310,18 +385,19 @@ class _BannerSectionState extends State<BannerSection> {
                 _position = page.toDouble();
               });
             },
-            children: [
-              BannerView(),
-              BannerView(),
-              BannerView(),
-            ],
+            children: widget.movieList
+                    ?.map((movie) => BannerView(
+                          movie: movie,
+                        ))
+                    .toList() ??
+                [],
           ),
         ),
         SizedBox(
           height: MARGIN_MEDIUM,
         ),
         DotsIndicator(
-          dotsCount: 3,
+          dotsCount: widget.movieList?.length ?? 1,
           position: _position,
           decorator: DotsDecorator(
             color: HOME_SCREEN_BANNER_DOTS_INACTIVE_COLOR,

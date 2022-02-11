@@ -11,7 +11,14 @@ class GetGenreResponse{
 
   GetGenreResponse(this.genres);
 
+
+  @override
+  String toString() {
+    return 'GetGenreResponse{genres: $genres}';
+  }
+
   factory GetGenreResponse.fromJson(Map<String, dynamic> json) => _$GetGenreResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$GetGenreResponseToJson(this);
+
 }

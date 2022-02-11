@@ -48,7 +48,7 @@ class _TheMovieApi implements TheMovieApi {
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<MovieListResponse>(
             Options(method: 'GET', headers: _headers, extra: _extra)
-                .compose(_dio.options, '3/movie/popular',
+                .compose(_dio.options, '/3/movie/popular',
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = MovieListResponse.fromJson(_result.data!);
@@ -68,7 +68,7 @@ class _TheMovieApi implements TheMovieApi {
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<MovieListResponse>(
             Options(method: 'GET', headers: _headers, extra: _extra)
-                .compose(_dio.options, '3/movie/top_rated',
+                .compose(_dio.options, '/3/movie/top_rated',
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = MovieListResponse.fromJson(_result.data!);
@@ -82,14 +82,14 @@ class _TheMovieApi implements TheMovieApi {
     final queryParameters = <String, dynamic>{
       r'api_key': apiKey,
       r'language': language,
-      r'genre_id': genreId
+      r'page': genreId
     };
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<MovieListResponse>(
             Options(method: 'GET', headers: _headers, extra: _extra)
-                .compose(_dio.options, '3/discover/movie',
+                .compose(_dio.options, '/3/discover/movie',
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = MovieListResponse.fromJson(_result.data!);
@@ -108,7 +108,7 @@ class _TheMovieApi implements TheMovieApi {
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<GetGenreResponse>(
             Options(method: 'GET', headers: _headers, extra: _extra)
-                .compose(_dio.options, '/3/movie/now_playing',
+                .compose(_dio.options, '/3/genre/movie/list',
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = GetGenreResponse.fromJson(_result.data!);
@@ -128,10 +128,49 @@ class _TheMovieApi implements TheMovieApi {
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<GetActorsResponse>(
             Options(method: 'GET', headers: _headers, extra: _extra)
-                .compose(_dio.options, '3/person/popular',
+                .compose(_dio.options, '/3/person/popular',
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = GetActorsResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<MovieVO?> getMoviesDetail(apiKey, language, movieId) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'api_key': apiKey,
+      r'language': language
+    };
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<Map<String, dynamic>?>(
+        _setStreamType<MovieVO>(
+            Options(method: 'GET', headers: _headers, extra: _extra)
+                .compose(_dio.options, '/3/movie/${movieId}',
+                    queryParameters: queryParameters, data: _data)
+                .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = _result.data == null ? null : MovieVO.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<GetCreditByMovieResponse> getMovieCredit(
+      apiKey, language, movieId) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'api_key': apiKey,
+      r'language': language
+    };
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<GetCreditByMovieResponse>(
+            Options(method: 'GET', headers: _headers, extra: _extra)
+                .compose(_dio.options, '/3/movie/${movieId}/credits',
+                    queryParameters: queryParameters, data: _data)
+                .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = GetCreditByMovieResponse.fromJson(_result.data!);
     return value;
   }
 

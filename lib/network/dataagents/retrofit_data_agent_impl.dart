@@ -31,6 +31,13 @@ class RetrofitDataAgentImpl extends MovieDataAgent {
         .map((response) => response.results)
         .first ;
   }
+  @override
+  Future<List<MovieVO>?> getPopularMovies(int page) {
+    return movieApi.getPopularMovies(API_KEY, LANGUAGE_EN_US, page.toString())
+        .asStream()
+        .map((response) => response.results)
+        .first ;
+  }
 
   @override
   Future<List<ActorsVO>?> getActors(int page) {
@@ -44,7 +51,7 @@ class RetrofitDataAgentImpl extends MovieDataAgent {
   Future<List<GenreVO>?> getGenres() {
     return movieApi.getGenres(API_KEY, LANGUAGE_EN_US)
         .asStream()
-        .map((response) => response.genres)
+        .map((response) =>response.genres)
         .first ;
   }
 
@@ -56,13 +63,7 @@ class RetrofitDataAgentImpl extends MovieDataAgent {
         .first ;
   }
 
-  @override
-  Future<List<MovieVO>?> getPopularMovies(int page) {
-    return movieApi.getPopularMovies(API_KEY, LANGUAGE_EN_US, page.toString())
-        .asStream()
-        .map((response) => response.results)
-        .first ;
-  }
+
 
   @override
   Future<List<MovieVO>?> getTopRatedMovies(int page) {
@@ -70,6 +71,19 @@ class RetrofitDataAgentImpl extends MovieDataAgent {
         .asStream()
         .map((response) => response.results)
         .first ;
+  }
+
+  @override
+  Future<List<List<ActorsVO>?>> getMovieCredit(int movieId) {
+   return movieApi.getMovieCredit(API_KEY, LANGUAGE_EN_US, movieId.toString())
+       .asStream()
+       .map((creditMovie) =>[creditMovie.cast,creditMovie.crew] )
+       .first;
+  }
+
+  @override
+  Future<MovieVO?> getMovieDetails(int movieId) {
+   return movieApi.getMoviesDetail(API_KEY, LANGUAGE_EN_US, movieId.toString());
   }
 
 

@@ -8,6 +8,11 @@ class GenreVO{
   @JsonKey(name: "name")
   String? name;
 
+  @override
+  String toString() {
+    return 'GenreVO{id: $id, name: $name}';
+  }
+
   GenreVO(this.id, this.name);
 
   factory GenreVO.fromJson( Map<String,dynamic> json) => _$GenreVOFromJson(json);

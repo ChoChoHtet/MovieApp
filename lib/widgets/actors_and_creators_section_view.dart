@@ -6,13 +6,16 @@ import 'package:module_3_movies_app/resources/dimens.dart';
 import 'package:module_3_movies_app/viewItems/best_actor_view.dart';
 import 'package:module_3_movies_app/widgets/title_with_see_more_text.dart';
 
+import '../data/vos/actors_vo.dart';
+
 class ActorsAndCreatorsSectionView extends StatelessWidget {
   final String titleText;
   final String seeMoreText;
   final bool seeMoreButtonVisibility;
+  final List<ActorsVO>?  actorList;
 
   const ActorsAndCreatorsSectionView(this.titleText, this.seeMoreText,
-      {this.seeMoreButtonVisibility = true});
+      {this.seeMoreButtonVisibility = true,required this.actorList});
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +44,7 @@ class ActorsAndCreatorsSectionView extends StatelessWidget {
                   vertical: 0, horizontal: MARGIN_MEDIUM_2),
               child: ListView(
                 scrollDirection: Axis.horizontal,
-                children: [
-                  BestActorView(),
-                  BestActorView(),
-                  BestActorView(),
-                ],
+                children: actorList?.map((actor) => BestActorView(actor: actor)).toList() ?? [],
               ),
             ),
           ),

@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:module_3_movies_app/data/vos/actors_vo.dart';
+import 'package:module_3_movies_app/network/api_constants.dart';
 import 'package:module_3_movies_app/resources/colors.dart';
 import 'package:module_3_movies_app/resources/dimens.dart';
 
 class BestActorView extends StatelessWidget {
+  final ActorsVO? actor;
+  BestActorView({required this.actor});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -11,7 +16,7 @@ class BestActorView extends StatelessWidget {
       child: Stack(
         children: [
           Positioned.fill(
-            child: ActorImageView(),
+            child: ActorImageView(profileUrl: actor?.profilePath ?? "",),
           ),
           Align(
             alignment: Alignment.topRight,
@@ -19,7 +24,7 @@ class BestActorView extends StatelessWidget {
           ),
           Align(
             alignment: Alignment.bottomCenter,
-            child: TitleAndLikeView(),
+            child: TitleAndLikeView(name: actor?.name ?? "",),
           ),
         ],
       ),
@@ -28,6 +33,8 @@ class BestActorView extends StatelessWidget {
 }
 
 class TitleAndLikeView extends StatelessWidget {
+  final String name;
+  TitleAndLikeView({required this.name});
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -40,7 +47,7 @@ class TitleAndLikeView extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            "Leonardo DiCaprio",
+           name,
             style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
@@ -88,11 +95,13 @@ class FavoriteButtonView extends StatelessWidget {
 }
 
 class ActorImageView extends StatelessWidget {
+  final String profileUrl;
+  ActorImageView({required this.profileUrl});
 
   @override
   Widget build(BuildContext context) {
     return Image.network(
-      "https://ca-times.brightspotcdn.com/dims4/default/b5274df/2147483647/strip/true/crop/5487x8230+0+0/resize/991x1486!/quality/90/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F84%2F02%2F5be20f5b4be89a6b0d1c76370aab%2Fla-photos-1staff-478108-en-0117-quentin-tarantino-jlc-20758.jpg",
+      "$IMAGES_BASE_URL$profileUrl",
       fit: BoxFit.cover,
     );
   }

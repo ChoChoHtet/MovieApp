@@ -53,4 +53,16 @@ class DioMovieDataAgentImpl extends MovieDataAgent{
     throw UnimplementedError();
   }
 
+  @override
+  Future<List<List<ActorsVO>?>> getMovieCredit(int movieId) {
+    // TODO: implement getMovieCredit
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<MovieVO?> getMovieDetails(int movieId) {
+    // TODO: implement getMovieDetails
+    throw UnimplementedError();
+  }
+
 }

@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:module_3_movies_app/data/vos/movie_vo.dart';
+import 'package:module_3_movies_app/network/api_constants.dart';
 import 'package:module_3_movies_app/resources/dimens.dart';
 import 'package:module_3_movies_app/widgets/play_button_view.dart';
 import 'package:module_3_movies_app/widgets/title_text.dart';
 
 class ShowCaseView extends StatelessWidget {
+  final MovieVO movie;
+
+  ShowCaseView({required this.movie});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -12,15 +18,20 @@ class ShowCaseView extends StatelessWidget {
       child: Stack(
         children: [
           Positioned.fill(
-            child: ShowCaseImageView(),
+            child: ShowCaseImageView(
+              imgUrl: movie.posterPath ?? "",
+            ),
           ),
           Align(
-           alignment: Alignment.center,
-           child: PlayButtonView(),
+            alignment: Alignment.center,
+            child: PlayButtonView(),
           ),
           Align(
             alignment: Alignment.bottomLeft,
-            child: TitleAndDateView(),
+            child: TitleAndDateView(
+              title: movie.title ?? "",
+              releaseDate: movie.releaseDate ?? "",
+            ),
           )
         ],
       ),
@@ -29,6 +40,10 @@ class ShowCaseView extends StatelessWidget {
 }
 
 class TitleAndDateView extends StatelessWidget {
+  final String title;
+  final String releaseDate;
+
+  TitleAndDateView({required this.title, required this.releaseDate});
 
   @override
   Widget build(BuildContext context) {
@@ -38,13 +53,17 @@ class TitleAndDateView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text("Passengers",style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w700,
-            fontSize: TEXT_REGULAR_3x
-          ),),
-          SizedBox(height: MARGIN_MEDIUM,),
-          TitleText("15 DECEMBER 20116"),
+          Text(
+            title,
+            style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+                fontSize: TEXT_REGULAR_3x),
+          ),
+          SizedBox(
+            height: MARGIN_MEDIUM,
+          ),
+          TitleText(releaseDate),
         ],
       ),
     );
@@ -52,11 +71,14 @@ class TitleAndDateView extends StatelessWidget {
 }
 
 class ShowCaseImageView extends StatelessWidget {
+  final String imgUrl;
+
+  ShowCaseImageView({required this.imgUrl});
 
   @override
   Widget build(BuildContext context) {
     return Image.network(
-      "https://www.hollywoodreporter.com/wp-content/uploads/2016/12/passengers_still_1_publicity_-_h_2016.jpg",
+      "$IMAGES_BASE_URL$imgUrl",
       fit: BoxFit.cover,
     );
   }

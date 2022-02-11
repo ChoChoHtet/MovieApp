@@ -118,6 +118,7 @@ class MovieDetailPage extends StatelessWidget {
                     MOVIES_DETAIL_ACTORS_TITLE,
                     "",
                     seeMoreButtonVisibility: false,
+                    actorList: [],
                   ),
                   SizedBox(
                     height: MARGIN_MEDIUM_2,
@@ -172,6 +173,7 @@ class MovieDetailPage extends StatelessWidget {
                   ActorsAndCreatorsSectionView(
                     MOVIES_DETAIL_CREATORS_TITLE,
                     MOVIES_DETAIL_CREATORS_SEE_MORE,
+                    actorList: [],
                   ),
                 ]))
           ],

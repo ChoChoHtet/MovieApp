@@ -8,7 +8,7 @@ import 'package:module_3_movies_app/pages/movies_detail_page.dart';
 void main() {
   //HttpMovieDataAgentImpl().getNowPlayingMovies(1);
   //DioMovieDataAgentImpl().getNowPlayingMovies(1);
-  RetrofitDataAgentImpl().getNowPlayingMovies(1);
+  //RetrofitDataAgentImpl().getNowPlayingMovies(1);
   runApp(MyApp());
 }
 
