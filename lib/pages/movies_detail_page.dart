@@ -288,28 +288,31 @@ class TrailerSectionView extends StatelessWidget {
         SizedBox(
           height: MARGIN_XLARGE,
         ),
-        Row(
-          children: [
-            MovieDetailButtonView(
-                MOVIES_DETAIL_PLAY_TRAILER,
-                Icon(
-                  Icons.play_circle_fill,
-                  color: Colors.black54,
-                ),
-                PLAY_BUTTON_COLOR),
-            SizedBox(
-              width: MARGIN_MEDIUM_2,
-            ),
-            MovieDetailButtonView(
-              MOVIES_DETAIL_RATE_MOVIE,
-              Icon(
-                Icons.star,
-                color: PLAY_BUTTON_COLOR,
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              MovieDetailButtonView(
+                  MOVIES_DETAIL_PLAY_TRAILER,
+                  Icon(
+                    Icons.play_circle_fill,
+                    color: Colors.black54,
+                  ),
+                  PLAY_BUTTON_COLOR),
+              SizedBox(
+                width: MARGIN_MEDIUM_2,
               ),
-              HOME_SCREEN_BACKGROUND_COLOR,
-              isGhostButton: true,
-            ),
-          ],
+              MovieDetailButtonView(
+                MOVIES_DETAIL_RATE_MOVIE,
+                Icon(
+                  Icons.star,
+                  color: PLAY_BUTTON_COLOR,
+                ),
+                HOME_SCREEN_BACKGROUND_COLOR,
+                isGhostButton: true,
+              ),
+            ],
+          ),
         ),
       ],
     );

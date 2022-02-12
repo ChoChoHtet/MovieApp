@@ -13,6 +13,7 @@ const END_POINTS_MOVIE_DETAIL="/3/movie";
 
 //image base url
 const IMAGES_BASE_URL="http://image.tmdb.org/t/p/w400/";
+const DEFAULT_IMAGES_URL="https://www.nicepng.com/png/full/6-66708_arts-teaching-film-study-media-arts-clip-art.png";
 
 //params
 const PARAMS_API_KEY="api_key";

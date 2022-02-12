@@ -6,6 +6,7 @@ import 'package:module_3_movies_app/resources/dimens.dart';
 
 class BestActorView extends StatelessWidget {
   final ActorsVO? actor;
+
   BestActorView({required this.actor});
 
   @override
@@ -16,7 +17,9 @@ class BestActorView extends StatelessWidget {
       child: Stack(
         children: [
           Positioned.fill(
-            child: ActorImageView(profileUrl: actor?.profilePath ?? "",),
+            child: ActorImageView(
+              profileUrl: actor?.profilePath,
+            ),
           ),
           Align(
             alignment: Alignment.topRight,
@@ -24,7 +27,9 @@ class BestActorView extends StatelessWidget {
           ),
           Align(
             alignment: Alignment.bottomCenter,
-            child: TitleAndLikeView(name: actor?.name ?? "",),
+            child: TitleAndLikeView(
+              name: actor?.name ?? "",
+            ),
           ),
         ],
       ),
@@ -34,7 +39,9 @@ class BestActorView extends StatelessWidget {
 
 class TitleAndLikeView extends StatelessWidget {
   final String name;
+
   TitleAndLikeView({required this.name});
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -47,7 +54,7 @@ class TitleAndLikeView extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-           name,
+            name,
             style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
@@ -56,7 +63,7 @@ class TitleAndLikeView extends StatelessWidget {
           SizedBox(
             height: MARGIN_MEDIUM,
           ),
-          Row(
+          Wrap(
             children: [
               Icon(
                 Icons.thumb_up,
@@ -68,6 +75,7 @@ class TitleAndLikeView extends StatelessWidget {
               Text(
                 "YOU LIKE 18 MOVIES",
                 style: TextStyle(
+                  overflow: TextOverflow.ellipsis,
                     color: HOME_SCREEN_LIST_TITLE_COLOR,
                     fontWeight: FontWeight.w400,
                     fontSize: MARGIN_CARD_MEDIUM_2),
@@ -81,7 +89,6 @@ class TitleAndLikeView extends StatelessWidget {
 }
 
 class FavoriteButtonView extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -95,14 +102,21 @@ class FavoriteButtonView extends StatelessWidget {
 }
 
 class ActorImageView extends StatelessWidget {
-  final String profileUrl;
+  final String? profileUrl;
+
   ActorImageView({required this.profileUrl});
 
   @override
   Widget build(BuildContext context) {
+    // return FadeInImage.assetNetwork(
+    //   placeholder: "assets/ic_default_video.png",
+    //   image: "$IMAGES_BASE_URL$profileUrl",
+    // );
     return Image.network(
-      "$IMAGES_BASE_URL$profileUrl",
-      fit: BoxFit.cover,
+      profileUrl != null ? "$IMAGES_BASE_URL$profileUrl" : DEFAULT_IMAGES_URL,
+      width: profileUrl != null ? MOVIES_LIST_WIDTH : 50,
+      height: profileUrl != null ? BEST_ACTOR_HEIGHT : 50,
+      fit: profileUrl != null ? BoxFit.cover : BoxFit.contain,
     );
   }
 }
