@@ -6,7 +6,7 @@ import 'package:module_3_movies_app/widgets/play_button_view.dart';
 import 'package:module_3_movies_app/widgets/title_text.dart';
 
 class ShowCaseView extends StatelessWidget {
-  final MovieVO movie;
+  final MovieVO? movie;
 
   ShowCaseView({required this.movie});
 
@@ -19,7 +19,7 @@ class ShowCaseView extends StatelessWidget {
         children: [
           Positioned.fill(
             child: ShowCaseImageView(
-              imgUrl: movie.posterPath ?? "",
+              imgUrl: movie?.posterPath ?? "",
             ),
           ),
           Align(
@@ -29,8 +29,8 @@ class ShowCaseView extends StatelessWidget {
           Align(
             alignment: Alignment.bottomLeft,
             child: TitleAndDateView(
-              title: movie.title ?? "",
-              releaseDate: movie.releaseDate ?? "",
+              title: movie?.title ?? "",
+              releaseDate: movie?.releaseDate ?? "",
             ),
           )
         ],
