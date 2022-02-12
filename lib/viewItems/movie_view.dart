@@ -6,9 +6,9 @@ import 'package:module_3_movies_app/resources/dimens.dart';
 import 'package:module_3_movies_app/widgets/rating_view.dart';
 
 class MovieView extends StatelessWidget {
- final Function onTapMovie;
+ //final Function onTapMovie;
  final MovieVO? movie;
-  const MovieView(this.onTapMovie,this.movie);
+  const MovieView(this.movie);
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -18,16 +18,15 @@ class MovieView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              GestureDetector(
-                onTap:(){
-                 onTapMovie();
-                },
-                child: Image.network(
+              // GestureDetector(
+              //   onTap:(){
+              //    onTapMovie();
+              //   },
+                 Image.network(
                 "$IMAGES_BASE_URL${movie?.posterPath ?? ""}",
                   fit: BoxFit.cover,
                   height: 200,
                 ),
-              ),
               SizedBox(
                 height: MARGIN_MEDIUM_2,
               ),

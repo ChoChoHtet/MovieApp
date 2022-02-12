@@ -9,4 +9,6 @@ abstract class MovieModel{
   Future<List<MovieVO>?> getMoviesByGenreId(int genreId);
   Future<List<GenreVO>?> getGenres();
   Future<List<ActorsVO>?> getActors();
+  Future<MovieVO?> getMovieDetails(int movieId);
+  Future<List<List<ActorsVO>?>> getMovieCredit(int movieId);
 }

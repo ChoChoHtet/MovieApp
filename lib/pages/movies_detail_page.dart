@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:module_3_movies_app/data/%20models/movie_model.dart';
+import 'package:module_3_movies_app/data/%20models/movie_model_impl.dart';
+import 'package:module_3_movies_app/data/vos/actors_vo.dart';
+import 'package:module_3_movies_app/network/api_constants.dart';
 import 'package:module_3_movies_app/resources/colors.dart';
 import 'package:module_3_movies_app/resources/dimens.dart';
 import 'package:module_3_movies_app/resources/strings.dart';
@@ -7,8 +11,45 @@ import 'package:module_3_movies_app/widgets/gradient_view.dart';
 import 'package:module_3_movies_app/widgets/rating_view.dart';
 import 'package:module_3_movies_app/widgets/title_text.dart';
 
-class MovieDetailPage extends StatelessWidget {
+import '../data/vos/movie_vo.dart';
+
+class MovieDetailPage extends StatefulWidget {
+  final int? movieId;
+
+  MovieDetailPage({required this.movieId});
+
+  @override
+  State<MovieDetailPage> createState() => _MovieDetailPageState();
+}
+
+class _MovieDetailPageState extends State<MovieDetailPage> {
   final List<String> genreList = ["Family", "Fantasy", "Adventure"];
+  final MovieModel _movieModel = MovieModelImpl();
+
+  //Model
+  MovieVO? movie;
+  List<ActorsVO>? cast;
+  List<ActorsVO>? crew;
+
+  @override
+  void initState() {
+    _movieModel.getMovieDetails(widget.movieId ?? 0).then((movieDetail) {
+      setState(() {
+        this.movie = movieDetail;
+      });
+    }).catchError((error) {
+      debugPrint("movie detail error: $error");
+    });
+    _movieModel.getMovieCredit(widget.movieId ?? 0).then((movieCredit) {
+      setState(() {
+        this.cast = movieCredit.first;
+        this.crew = movieCredit.last;
+      });
+    }).catchError((error) {
+      debugPrint("movie credit error: $error");
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,82 +141,87 @@ class MovieDetailPage extends StatelessWidget {
         // ),
         child: CustomScrollView(
           slivers: [
-            MovieDetailsSliverAppView(() {
-              Navigator.pop(context);
-            }),
+            MovieDetailsSliverAppView(
+              () {
+                Navigator.pop(context);
+              },
+              movie: movie,
+            ),
             SliverList(
                 delegate: SliverChildListDelegate(<Widget>[
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: MARGIN_MEDIUM_2,
-                        horizontal: MARGIN_MEDIUM_2),
-                    child: TrailerSectionView(genreList),
-                  ),
-                  SizedBox(
-                    height: MARGIN_MEDIUM_2,
-                  ),
-                  ActorsAndCreatorsSectionView(
-                    MOVIES_DETAIL_ACTORS_TITLE,
-                    "",
-                    seeMoreButtonVisibility: false,
-                    actorList: [],
-                  ),
-                  SizedBox(
-                    height: MARGIN_MEDIUM_2,
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(MARGIN_MEDIUM_2),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TitleText("ABOUT FILM"),
-                        SizedBox(
-                          height: MARGIN_MEDIUM_2,
-                        ),
-                        AboutFilmInfoView(
-                          "Original Title:",
-                          "Fantastic Beasts and Where to find them",
-                        ),
-                        SizedBox(
-                          height: MARGIN_MEDIUM_2,
-                        ),
-                        AboutFilmInfoView(
-                          "Type:",
-                          "Family,Fantasy, Adventure",
-                        ),
-                        SizedBox(
-                          height: MARGIN_MEDIUM_2,
-                        ),
-                        AboutFilmInfoView(
-                          "Production:",
-                          "United Kingdom, USA",
-                        ),
-                        SizedBox(
-                          height: MARGIN_MEDIUM_2,
-                        ),
-                        AboutFilmInfoView(
-                          "Premiere:",
-                          "8 November 2016 ( World)",
-                        ),
-                        SizedBox(
-                          height: MARGIN_MEDIUM_2,
-                        ),
-                        AboutFilmInfoView(
-                          "Description:",
-                          "Arriving in New York for a brief stopover, he might have come and gone without incident, were it not for a No-Maj (American for Muggle) named Jacob, a misplaced magical case, and the escape of some of Newt's fantastic beasts, which could spell trouble for both the wizarding and No-Maj worlds.",
-                        ),
-                      ],
+              Container(
+                padding: const EdgeInsets.symmetric(
+                    vertical: MARGIN_MEDIUM_2, horizontal: MARGIN_MEDIUM_2),
+                child: TrailerSectionView(
+                  genreList: movie?.getGenreAsStringList() ?? [],
+                  storyLine: movie?.overview ?? "",
+                ),
+              ),
+              SizedBox(
+                height: MARGIN_MEDIUM_2,
+              ),
+              ActorsAndCreatorsSectionView(
+                MOVIES_DETAIL_ACTORS_TITLE,
+                "",
+                seeMoreButtonVisibility: false,
+                actorList: this.cast,
+              ),
+              SizedBox(
+                height: MARGIN_MEDIUM_2,
+              ),
+              Container(
+                padding: EdgeInsets.all(MARGIN_MEDIUM_2),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TitleText("ABOUT FILM"),
+                    SizedBox(
+                      height: MARGIN_MEDIUM_2,
                     ),
-                  ),
-                  SizedBox(
-                    height: MARGIN_MEDIUM_2,
-                  ),
-                  ActorsAndCreatorsSectionView(
-                    MOVIES_DETAIL_CREATORS_TITLE,
-                    MOVIES_DETAIL_CREATORS_SEE_MORE,
-                    actorList: [],
-                  ),
-                ]))
+                    AboutFilmInfoView(
+                      "Original Title:",
+                     movie?.originalTitle ?? "",
+                    ),
+                    SizedBox(
+                      height: MARGIN_MEDIUM_2,
+                    ),
+                    AboutFilmInfoView(
+                      "Type:",
+                      movie?.getGenreSeparatedAsCommonString() ?? "",
+                    ),
+                    SizedBox(
+                      height: MARGIN_MEDIUM_2,
+                    ),
+                    AboutFilmInfoView(
+                      "Production:",
+                    movie?.getProductionCountriesAsString() ?? "",
+                    ),
+                    SizedBox(
+                      height: MARGIN_MEDIUM_2,
+                    ),
+                    AboutFilmInfoView(
+                      "Premiere:",
+                     movie?.releaseDate ?? "",
+                    ),
+                    SizedBox(
+                      height: MARGIN_MEDIUM_2,
+                    ),
+                    AboutFilmInfoView(
+                      "Description:",
+                      movie?.overview ?? ""
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: MARGIN_MEDIUM_2,
+              ),
+              ActorsAndCreatorsSectionView(
+                MOVIES_DETAIL_CREATORS_TITLE,
+                MOVIES_DETAIL_CREATORS_SEE_MORE,
+                actorList: this.crew,
+              ),
+            ]))
           ],
         ),
       ),
@@ -195,10 +241,7 @@ class AboutFilmInfoView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          width: MediaQuery
-              .of(context)
-              .size
-              .width / 4,
+          width: MediaQuery.of(context).size.width / 4,
           child: Text(
             titleText,
             style: TextStyle(
@@ -226,22 +269,22 @@ class AboutFilmInfoView extends StatelessWidget {
 
 class TrailerSectionView extends StatelessWidget {
   final List<String> genreList;
+  final String storyLine;
 
-  const TrailerSectionView(this.genreList);
+  const TrailerSectionView({required this.genreList, required this.storyLine});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: MoviesTimeAndGenreView(genreList),
-        ),
+        MoviesTimeAndGenreView(genreList),
         SizedBox(
           height: MARGIN_MEDIUM_2,
         ),
-        StoryLineView(),
+        StoryLineView(
+          overview: storyLine,
+        ),
         SizedBox(
           height: MARGIN_XLARGE,
         ),
@@ -292,9 +335,9 @@ class MovieDetailButtonView extends StatelessWidget {
         borderRadius: BorderRadius.circular(MARGIN_XLARGE),
         border: isGhostButton
             ? Border.all(
-          color: Colors.white,
-          width: 2,
-        )
+                color: Colors.white,
+                width: 2,
+              )
             : null,
       ),
       child: Row(
@@ -317,6 +360,9 @@ class MovieDetailButtonView extends StatelessWidget {
 }
 
 class StoryLineView extends StatelessWidget {
+  final String overview;
+
+  StoryLineView({required this.overview});
 
   @override
   Widget build(BuildContext context) {
@@ -328,7 +374,7 @@ class StoryLineView extends StatelessWidget {
           height: MARGIN_MEDIUM_2,
         ),
         Text(
-          "After Tina and Newt find Jacob and the suitcase, Tina takes them to her apartment and introduces them to Queenie, her Legilimens sister. Jacob and Queenie are mutually attracted, though American wizards are forbidden to have any contact with No-Majs. Newt takes ",
+          overview,
           style: TextStyle(
             color: Colors.white,
             fontSize: TEXT_REGULAR_3x,
@@ -340,14 +386,17 @@ class StoryLineView extends StatelessWidget {
 }
 
 class MoviesTimeAndGenreView extends StatelessWidget {
-
-
   final List<String> genreList;
+
   const MoviesTimeAndGenreView(this.genreList);
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Wrap(
+      //row
+      alignment: WrapAlignment.start,
+      //column
+      crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         Icon(
           Icons.access_time,
@@ -366,13 +415,12 @@ class MoviesTimeAndGenreView extends StatelessWidget {
         SizedBox(
           width: MARGIN_MEDIUM_2,
         ),
-        Row(
-          children: genreList
-              .map(
-                (genre) => GenreChipView(genre),
-          )
-              .toList(),
-        ),
+       //combine with wrap using spread operations
+       ...genreList
+           .map(
+             (genre) => GenreChipView(genre),
+       )
+           .toList(),
         SizedBox(
           width: MARGIN_MEDIUM_2,
         ),
@@ -393,6 +441,8 @@ class GenreChipView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      //wrap content
+      mainAxisSize: MainAxisSize.min,
       children: [
         Chip(
           padding: EdgeInsets.all(MARGIN_MEDIUM),
@@ -415,8 +465,9 @@ class GenreChipView extends StatelessWidget {
 
 class MovieDetailsSliverAppView extends StatelessWidget {
   final Function onTapBack;
+  final MovieVO? movie;
 
-  const MovieDetailsSliverAppView(this.onTapBack);
+  const MovieDetailsSliverAppView(this.onTapBack, {required this.movie});
 
   @override
   Widget build(BuildContext context) {
@@ -431,7 +482,9 @@ class MovieDetailsSliverAppView extends StatelessWidget {
         background: Stack(
           children: [
             Positioned.fill(
-              child: MovieDetailImageView(),
+              child: MovieDetailImageView(
+                posterPath: movie?.posterPath ?? "",
+              ),
             ),
             GradientView(),
             Align(
@@ -460,7 +513,9 @@ class MovieDetailsSliverAppView extends StatelessWidget {
                   right: MARGIN_MEDIUM_2,
                   bottom: MARGIN_XLARGE,
                 ),
-                child: MovieDetailsInfoView(),
+                child: MovieDetailsInfoView(
+                  movie: movie,
+                ),
               ),
             ),
           ],
@@ -471,6 +526,10 @@ class MovieDetailsSliverAppView extends StatelessWidget {
 }
 
 class MovieDetailsInfoView extends StatelessWidget {
+  final MovieVO? movie;
+
+  MovieDetailsInfoView({required this.movie});
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -479,7 +538,9 @@ class MovieDetailsInfoView extends StatelessWidget {
       children: [
         Row(
           children: [
-            MovieDetailsYearView(),
+            MovieDetailsYearView(
+              releaseYear: movie?.releaseDate?.substring(0, 4) ?? "",
+            ),
             Spacer(),
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -489,7 +550,7 @@ class MovieDetailsInfoView extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     RatingView(),
-                    TitleText("38876 VOTES"),
+                    TitleText("${movie?.voteCount ?? 0} VOTES"),
                     SizedBox(
                       height: MARGIN_MEDIUM,
                     ),
@@ -499,7 +560,7 @@ class MovieDetailsInfoView extends StatelessWidget {
                   width: MARGIN_CARD_MEDIUM_2,
                 ),
                 Text(
-                  "9,75",
+                  "${movie?.voteAverage ?? 0}",
                   style: TextStyle(
                       fontSize: MOVIE_DETAIL_RATING_TEXT_SIZE,
                       fontWeight: FontWeight.w300,
@@ -513,7 +574,7 @@ class MovieDetailsInfoView extends StatelessWidget {
           height: MARGIN_MEDIUM,
         ),
         Text(
-          "Fantastic Beasts and where to find them",
+          movie?.title ?? "",
           style: TextStyle(
             color: Colors.white,
             fontSize: TEXT_HEADING_1X,
@@ -526,6 +587,9 @@ class MovieDetailsInfoView extends StatelessWidget {
 }
 
 class MovieDetailsYearView extends StatelessWidget {
+  final String releaseYear;
+
+  MovieDetailsYearView({required this.releaseYear});
 
   @override
   Widget build(BuildContext context) {
@@ -538,7 +602,7 @@ class MovieDetailsYearView extends StatelessWidget {
       ),
       child: Center(
         child: Text(
-          "2016",
+          releaseYear,
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w600,
@@ -550,7 +614,6 @@ class MovieDetailsYearView extends StatelessWidget {
 }
 
 class SearchButtonView extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Icon(
@@ -569,14 +632,14 @@ class BackButtonView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         onTapBack();
       },
       child: Container(
         width: MARGIN_XXLARGE,
         height: MARGIN_XXLARGE,
-        decoration: BoxDecoration(
-            color: Colors.black54, shape: BoxShape.circle),
+        decoration:
+            BoxDecoration(color: Colors.black54, shape: BoxShape.circle),
         child: Icon(
           Icons.chevron_left,
           size: MARGIN_XLARGE,
@@ -588,10 +651,14 @@ class BackButtonView extends StatelessWidget {
 }
 
 class MovieDetailImageView extends StatelessWidget {
+  final String? posterPath;
+
+  MovieDetailImageView({required this.posterPath});
+
   @override
   Widget build(BuildContext context) {
     return Image.network(
-      "https://i.gadgets360cdn.com/large/Fantastic_Beasts_and_Where_to_Find_Them_review_1479385830208.jpeg",
+      "$IMAGES_BASE_URL$posterPath",
       fit: BoxFit.cover,
     );
   }

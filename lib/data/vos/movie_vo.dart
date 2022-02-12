@@ -6,12 +6,13 @@ import 'package:module_3_movies_app/data/vos/production_countries_vo.dart';
 import 'package:module_3_movies_app/data/vos/spoken_languages_vo.dart';
 
 part 'movie_vo.g.dart';
+
 @JsonSerializable()
-class MovieVO{
-  @JsonKey(name:"adult")
+class MovieVO {
+  @JsonKey(name: "adult")
   bool? adult;
 
-  @JsonKey(name:"backdrop_path")
+  @JsonKey(name: "backdrop_path")
   String? backDropPath;
 
   @JsonKey(name: "belongs_to_collection")
@@ -26,28 +27,28 @@ class MovieVO{
   @JsonKey(name: "homepage")
   String? homePage;
 
-  @JsonKey(name:"genre_ids")
+  @JsonKey(name: "genre_ids")
   List<int>? genreIds;
 
-  @JsonKey(name:"id")
+  @JsonKey(name: "id")
   int? id;
 
   @JsonKey(name: "imdb_id")
   String? imdbId;
 
-  @JsonKey(name:"original_language")
+  @JsonKey(name: "original_language")
   String? originalLanguage;
 
-  @JsonKey(name:"original_title")
+  @JsonKey(name: "original_title")
   String? originalTitle;
 
-  @JsonKey(name:"overview")
+  @JsonKey(name: "overview")
   String? overview;
 
-  @JsonKey(name:"popularity")
+  @JsonKey(name: "popularity")
   double? popularity;
 
-  @JsonKey(name:"poster_path")
+  @JsonKey(name: "poster_path")
   String? posterPath;
 
   @JsonKey(name: "production_companies")
@@ -56,7 +57,7 @@ class MovieVO{
   @JsonKey(name: "production_countries")
   List<ProductionCountriesVO>? productionCountries;
 
-  @JsonKey(name:"release_date")
+  @JsonKey(name: "release_date")
   String? releaseDate;
 
   @JsonKey(name: "revenue")
@@ -74,21 +75,20 @@ class MovieVO{
   @JsonKey(name: "tagline")
   String? tagline;
 
-  @JsonKey(name:"title")
+  @JsonKey(name: "title")
   String? title;
 
-  @JsonKey(name:"video")
+  @JsonKey(name: "video")
   bool? video;
 
-  @JsonKey(name:"vote_average")
+  @JsonKey(name: "vote_average")
   double? voteAverage;
 
-  @JsonKey(name:"vote_count")
+  @JsonKey(name: "vote_count")
   double? voteCount;
 
 
-  MovieVO(
-      this.adult,
+  MovieVO(this.adult,
       this.backDropPath,
       this.belongToCollection,
       this.budget,
@@ -113,11 +113,26 @@ class MovieVO{
       this.title,
       this.video,
       this.voteAverage,
-      this.voteCount);
+      this.voteCount) ;
 
-  factory MovieVO.fromJson( Map<String,dynamic> json) => _$MovieVOFromJson(json);
+  List<String> getGenreAsStringList () {
+    return this.genres?.map((genre) => genre.name ?? "").toList()  ?? [];
+  }
 
-  Map<String,dynamic> toJson() => _$MovieVOToJson(this);
+  String getGenreSeparatedAsCommonString() {
+   return  this.genres?.map((genre) => genre.name ?? "").toList().join(",") ?? "";
+  }
+
+  String getProductionCountriesAsString(){
+    return this.productionCountries?.map((country) => country.name ?? "").toList().join(",") ?? "";
+  }
+
+
+
+  factory MovieVO.fromJson(Map<String, dynamic> json) =>
+      _$MovieVOFromJson(json);
+
+  Map<String, dynamic> toJson() => _$MovieVOToJson(this);
 
   @override
   String toString() {

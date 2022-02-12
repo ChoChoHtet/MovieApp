@@ -125,9 +125,10 @@ class _HomePageState extends State<HomePage> {
               SizedBox(
                 height: MARGIN_LARGE,
               ),
-              BestPopularAndSerialView(() {
-                _navigatorPushToMovieDetailScreen(context);
-              }, getNowPlayingMovies),
+              BestPopularAndSerialView(
+                onTapMovie: (movieId) => _navigatorPushToMovieDetailScreen(context, movieId),
+                getNowPlayingMovies: getNowPlayingMovies,
+              ),
               SizedBox(
                 height: MARGIN_LARGE,
               ),
@@ -136,7 +137,7 @@ class _HomePageState extends State<HomePage> {
                 height: MARGIN_LARGE,
               ),
               GenreSectionView(
-                () => _navigatorPushToMovieDetailScreen(context),
+               onTapMovie: (movieId) => _navigatorPushToMovieDetailScreen(context,movieId) ,
                 genreList: getGenres,
                 movieList: moviesByGenre,
                 onChooseGenre: (genreId) {
@@ -166,24 +167,30 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _navigatorPushToMovieDetailScreen(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => MovieDetailPage(),
-      ),
-    );
+  void _navigatorPushToMovieDetailScreen(BuildContext context, int? id) {
+    if(id !=null){
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MovieDetailPage(
+            movieId: id,
+          ),
+        ),
+      );
+    }
+
   }
 }
 
 class GenreSectionView extends StatelessWidget {
   final List<GenreVO>? genreList;
   final List<MovieVO>? movieList;
-  final Function onTapMovie;
+  final Function(int?) onTapMovie;
   final Function(int?) onChooseGenre;
 
-  const GenreSectionView(this.onTapMovie,
-      {required this.genreList,
+  const GenreSectionView(
+      {required this.onTapMovie,
+      required this.genreList,
       required this.movieList,
       required this.onChooseGenre});
 
@@ -217,7 +224,7 @@ class GenreSectionView extends StatelessWidget {
           color: PRIMARY_COLOR,
           padding: EdgeInsets.only(top: MARGIN_MEDIUM_2, bottom: MARGIN_LARGE),
           child: HorizontalMoviesList(
-            onTapMovie,
+            onTapMovie: (movieId) => onTapMovie(movieId),
             movieList: movieList,
           ),
         ),
@@ -305,10 +312,10 @@ class ShowCasesSection extends StatelessWidget {
 }
 
 class BestPopularAndSerialView extends StatelessWidget {
-  final Function onTapMovie;
+  final Function(int?) onTapMovie;
   final List<MovieVO>? getNowPlayingMovies;
 
-  const BestPopularAndSerialView(this.onTapMovie, this.getNowPlayingMovies);
+  const BestPopularAndSerialView({required this.onTapMovie,required this.getNowPlayingMovies});
 
   @override
   Widget build(BuildContext context) {
@@ -324,7 +331,7 @@ class BestPopularAndSerialView extends StatelessWidget {
           height: 16,
         ),
         HorizontalMoviesList(
-          onTapMovie,
+          onTapMovie: (movieId) => onTapMovie(movieId),
           movieList: getNowPlayingMovies,
         ),
       ],
@@ -333,10 +340,11 @@ class BestPopularAndSerialView extends StatelessWidget {
 }
 
 class HorizontalMoviesList extends StatelessWidget {
-  final Function onTapMovie;
+  final Function(int?) onTapMovie;
   final List<MovieVO>? movieList;
 
-  const HorizontalMoviesList(this.onTapMovie, {required this.movieList});
+  const HorizontalMoviesList(
+      {required this.onTapMovie, required this.movieList});
 
   @override
   Widget build(BuildContext context) {
@@ -348,9 +356,11 @@ class HorizontalMoviesList extends StatelessWidget {
               padding: EdgeInsets.only(left: MARGIN_MEDIUM_2),
               itemCount: movieList?.length ?? 0,
               itemBuilder: (BuildContext context, int index) {
-                return MovieView(
-                  onTapMovie,
-                  movieList?[index],
+                return GestureDetector(
+                  onTap:() => onTapMovie(movieList?[index].id),
+                  child: MovieView(
+                    movieList?[index],
+                  ),
                 );
               },
             )
