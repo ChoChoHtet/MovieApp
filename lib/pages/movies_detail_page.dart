@@ -13,6 +13,7 @@ import 'package:module_3_movies_app/widgets/title_text.dart';
 
 import '../data/vos/movie_vo.dart';
 
+//movie
 class MovieDetailPage extends StatefulWidget {
   final int? movieId;
 
