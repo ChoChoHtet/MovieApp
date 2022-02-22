@@ -43,6 +43,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    //Network
     _movieModel.getNowPlayingMovies().then((value) {
       //refresh widget
       setState(() {
@@ -51,6 +52,16 @@ class _HomePageState extends State<HomePage> {
     }).catchError((error) {
       debugPrint("Now Playing error: $error");
     });
+    //Local
+    _movieModel.getNowPlayingFromDatabase().then((playingMovies){
+      setState(() {
+        getNowPlayingMovies = playingMovies ;
+      });
+    }).catchError((error){
+      debugPrint("Now Playing DB error: $error");
+    });
+
+    //Network
     _movieModel.getPopularMovies().then((value) {
       setState(() {
         getPopularMovies = value;
@@ -58,6 +69,16 @@ class _HomePageState extends State<HomePage> {
     }).catchError((error) {
       debugPrint("Popular error: $error");
     });
+    //Local
+    _movieModel.getPopularFromDatabase().then((popularMovies){
+      setState(() {
+        getPopularMovies = popularMovies ;
+      });
+    }).catchError((error){
+      debugPrint("Popular DB error: $error");
+    });
+
+    //Network
     _movieModel.getGenres().then((value) {
       debugPrint("Genre Response: ${value.toString()}");
       setState(() {
@@ -67,6 +88,17 @@ class _HomePageState extends State<HomePage> {
     }).catchError((error) {
       debugPrint("Genre error: $error");
     });
+
+    //Local
+    _movieModel.getGenresFromDatabase().then((genreList){
+      setState(() {
+       getGenres = genreList ;
+      });
+    }).catchError((error){
+      debugPrint("Genre DB error: $error");
+    });
+
+    //Network
     _movieModel.getTopRatedMovies().then((value) {
       //refresh widget
       debugPrint("Top Rated Response: ${value.toString()}");
@@ -76,6 +108,14 @@ class _HomePageState extends State<HomePage> {
     }).catchError((error) {
       debugPrint("Top Rated error: $error");
     });
+    _movieModel.getTopRatedFromDatabase().then((topRated){
+      setState(() {
+        topRatedMovies = topRated;
+      });
+    }).catchError((error){
+      debugPrint("Top Rated DB error: $error");
+    });
+    //Network
     _movieModel.getActors().then((value) {
       //refresh widget
       debugPrint("Actor Response: ${value.toString()}");
@@ -83,7 +123,17 @@ class _HomePageState extends State<HomePage> {
         actors = value;
       });
     }).catchError((error) {
-      debugPrint("Now Playing error: $error");
+      debugPrint("Actor error: $error");
+    });
+    //Local
+    _movieModel.getActorsFromDatabase().then((value) {
+      //refresh widget
+      debugPrint("Actor Response: ${value.toString()}");
+      setState(() {
+       actors = value;
+      });
+    }).catchError((error) {
+      debugPrint("Actor DB error: $error");
     });
     super.initState();
   }

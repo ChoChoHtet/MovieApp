@@ -33,9 +33,19 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
   @override
   void initState() {
+    //Network
     _movieModel.getMovieDetails(widget.movieId ?? 0).then((movieDetail) {
       setState(() {
         this.movie = movieDetail;
+      });
+    }).catchError((error) {
+      debugPrint("movie detail error: $error");
+    });
+
+    //Local
+    _movieModel.getMovieDetailFromDatabase(widget.movieId ?? 0).then((movieDetail) {
+      setState(() {
+        this.movie = movieDetail ;
       });
     }).catchError((error) {
       debugPrint("movie detail error: $error");

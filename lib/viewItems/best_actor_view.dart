@@ -64,6 +64,8 @@ class TitleAndLikeView extends StatelessWidget {
             height: MARGIN_MEDIUM,
           ),
           Wrap(
+            alignment: WrapAlignment.start,
+            crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               Icon(
                 Icons.thumb_up,
