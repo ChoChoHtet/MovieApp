@@ -10,7 +10,6 @@ import 'package:module_3_movies_app/resources/colors.dart';
 import 'package:module_3_movies_app/resources/dimens.dart';
 import 'package:module_3_movies_app/resources/strings.dart';
 import 'package:module_3_movies_app/viewItems/banner_view.dart';
-import 'package:module_3_movies_app/viewItems/best_actor_view.dart';
 import 'package:module_3_movies_app/viewItems/movie_view.dart';
 import 'package:module_3_movies_app/viewItems/show_case_view.dart';
 import 'package:module_3_movies_app/widgets/actors_and_creators_section_view.dart';
