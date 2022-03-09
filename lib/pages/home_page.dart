@@ -43,17 +43,18 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     //Network
-    _movieModel.getNowPlayingMovies().then((value) {
+   /* _movieModel.getNowPlayingMovies().then((value) {
       //refresh widget
       setState(() {
         getNowPlayingMovies = value;
       });
     }).catchError((error) {
       debugPrint("Now Playing error: $error");
-    });
+    });*/
     //Local
     _movieModel.getNowPlayingFromDatabase().then((playingMovies){
       setState(() {
+        debugPrint("Now Playing DB : $playingMovies");
         getNowPlayingMovies = playingMovies ;
       });
     }).catchError((error){
@@ -61,13 +62,13 @@ class _HomePageState extends State<HomePage> {
     });
 
     //Network
-    _movieModel.getPopularMovies().then((value) {
+   /* _movieModel.getPopularMovies().then((value) {
       setState(() {
         getPopularMovies = value;
       });
     }).catchError((error) {
       debugPrint("Popular error: $error");
-    });
+    });*/
     //Local
     _movieModel.getPopularFromDatabase().then((popularMovies){
       setState(() {
@@ -79,7 +80,7 @@ class _HomePageState extends State<HomePage> {
 
     //Network
     _movieModel.getGenres().then((value) {
-      debugPrint("Genre Response: ${value.toString()}");
+     // debugPrint("Genre Response: ${value.toString()}");
       setState(() {
         getGenres = value;
       });
@@ -98,7 +99,7 @@ class _HomePageState extends State<HomePage> {
     });
 
     //Network
-    _movieModel.getTopRatedMovies().then((value) {
+   /* _movieModel.getTopRatedMovies().then((value) {
       //refresh widget
       debugPrint("Top Rated Response: ${value.toString()}");
       setState(() {
@@ -106,7 +107,7 @@ class _HomePageState extends State<HomePage> {
       });
     }).catchError((error) {
       debugPrint("Top Rated error: $error");
-    });
+    });*/
     _movieModel.getTopRatedFromDatabase().then((topRated){
       setState(() {
         topRatedMovies = topRated;
@@ -117,7 +118,7 @@ class _HomePageState extends State<HomePage> {
     //Network
     _movieModel.getActors().then((value) {
       //refresh widget
-      debugPrint("Actor Response: ${value.toString()}");
+    //  debugPrint("Actor Response: ${value.toString()}");
       setState(() {
         actors = value;
       });
@@ -127,7 +128,7 @@ class _HomePageState extends State<HomePage> {
     //Local
     _movieModel.getActorsFromDatabase().then((value) {
       //refresh widget
-      debugPrint("Actor Response: ${value.toString()}");
+     // debugPrint("Actor Response: ${value.toString()}");
       setState(() {
        actors = value;
       });
@@ -456,7 +457,8 @@ class _BannerSectionState extends State<BannerSection> {
           height: MARGIN_MEDIUM,
         ),
         DotsIndicator(
-          dotsCount: widget.movieList?.length ?? 1,
+          //widget.movieList?.length ?? 1
+          dotsCount:  widget.movieList?.length ?? 1,
           position: _position,
           decorator: DotsDecorator(
             color: HOME_SCREEN_BANNER_DOTS_INACTIVE_COLOR,

@@ -4,11 +4,11 @@ import 'package:module_3_movies_app/data/vos/movie_vo.dart';
 
 abstract class MovieModel {
   // Remote
-  Future<List<MovieVO>?> getNowPlayingMovies();
+  void getNowPlayingMovies();
 
-  Future<List<MovieVO>?> getPopularMovies();
+  void getPopularMovies();
 
-  Future<List<MovieVO>?> getTopRatedMovies();
+  void getTopRatedMovies();
 
   Future<List<MovieVO>?> getMoviesByGenreId(int genreId);
 
