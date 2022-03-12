@@ -55,4 +55,30 @@ class MovieDao {
        // .where((element) => element.isTopRated ?? false)
         .toList());
   }
+
+  List<MovieVO> getPopularMovies() {
+    if( getAllMovies().isNotEmpty){
+      return getAllMovies()
+          .where((element) => element.isPopular ?? false).toList();
+    }else{
+      return [];
+    }
+  }
+
+  List<MovieVO> getTopRatedMovies() {
+    if( getAllMovies().isNotEmpty){
+      return getAllMovies()
+          .where((element) => element.isTopRated ?? false).toList();
+    }else{
+      return [];
+    }
+  }
+  List<MovieVO> getNowPlayingMovies() {
+    if( getAllMovies().isNotEmpty){
+      return getAllMovies()
+          .where((element) => element.isNowPlaying ?? false).toList();
+    }else{
+      return [];
+    }
+  }
 }

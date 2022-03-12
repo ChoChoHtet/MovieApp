@@ -52,12 +52,12 @@ class _HomePageState extends State<HomePage> {
       debugPrint("Now Playing error: $error");
     });*/
     //Local
-    _movieModel.getNowPlayingFromDatabase().then((playingMovies){
+    _movieModel.getNowPlayingFromDatabase().listen((playingMovies){
       setState(() {
         debugPrint("Now Playing DB : $playingMovies");
         getNowPlayingMovies = playingMovies ;
       });
-    }).catchError((error){
+    }).onError((error){
       debugPrint("Now Playing DB error: $error");
     });
 
@@ -70,11 +70,11 @@ class _HomePageState extends State<HomePage> {
       debugPrint("Popular error: $error");
     });*/
     //Local
-    _movieModel.getPopularFromDatabase().then((popularMovies){
+    _movieModel.getPopularFromDatabase().listen((popularMovies){
       setState(() {
         getPopularMovies = popularMovies ;
       });
-    }).catchError((error){
+    }).onError((error){
       debugPrint("Popular DB error: $error");
     });
 
@@ -108,11 +108,11 @@ class _HomePageState extends State<HomePage> {
     }).catchError((error) {
       debugPrint("Top Rated error: $error");
     });*/
-    _movieModel.getTopRatedFromDatabase().then((topRated){
+    _movieModel.getTopRatedFromDatabase().listen((topRated){
       setState(() {
         topRatedMovies = topRated;
       });
-    }).catchError((error){
+    }).onError((error){
       debugPrint("Top Rated DB error: $error");
     });
     //Network
