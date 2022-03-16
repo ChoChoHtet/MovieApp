@@ -1,8 +1,6 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:module_3_movies_app/data/%20models/movie_model.dart';
 import 'package:module_3_movies_app/data/%20models/movie_model_impl.dart';
-import 'package:module_3_movies_app/data/vos/actors_vo.dart';
 import 'package:module_3_movies_app/data/vos/genre_vo.dart';
 import 'package:module_3_movies_app/data/vos/movie_vo.dart';
 import 'package:module_3_movies_app/pages/movies_detail_page.dart';
@@ -16,138 +14,9 @@ import 'package:module_3_movies_app/widgets/actors_and_creators_section_view.dar
 import 'package:module_3_movies_app/widgets/see_more_text.dart';
 import 'package:module_3_movies_app/widgets/title_text.dart';
 import 'package:module_3_movies_app/widgets/title_with_see_more_text.dart';
+import 'package:scoped_model/scoped_model.dart';
 
-class HomePage extends StatefulWidget {
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  final List<String> genreList = [
-    "ACTION",
-    "ADVENTURE",
-    "CRIMINAL",
-    "DRAMA",
-    "COMEDY"
-  ];
-
-  MovieModel _movieModel = MovieModelImpl();
-
-  List<MovieVO>? getNowPlayingMovies;
-  List<MovieVO>? getPopularMovies;
-  List<GenreVO>? getGenres;
-  List<MovieVO>? moviesByGenre;
-  List<ActorsVO>? actors;
-  List<MovieVO>? topRatedMovies;
-
-  @override
-  void initState() {
-    //Network
-   /* _movieModel.getNowPlayingMovies().then((value) {
-      //refresh widget
-      setState(() {
-        getNowPlayingMovies = value;
-      });
-    }).catchError((error) {
-      debugPrint("Now Playing error: $error");
-    });*/
-    //Local
-    _movieModel.getNowPlayingFromDatabase().listen((playingMovies){
-      setState(() {
-        debugPrint("Now Playing DB : $playingMovies");
-        getNowPlayingMovies = playingMovies ;
-      });
-    }).onError((error){
-      debugPrint("Now Playing DB error: $error");
-    });
-
-    //Network
-   /* _movieModel.getPopularMovies().then((value) {
-      setState(() {
-        getPopularMovies = value;
-      });
-    }).catchError((error) {
-      debugPrint("Popular error: $error");
-    });*/
-    //Local
-    _movieModel.getPopularFromDatabase().listen((popularMovies){
-      setState(() {
-        getPopularMovies = popularMovies ;
-      });
-    }).onError((error){
-      debugPrint("Popular DB error: $error");
-    });
-
-    //Network
-    _movieModel.getGenres().then((value) {
-     // debugPrint("Genre Response: ${value.toString()}");
-      setState(() {
-        getGenres = value;
-      });
-      _getMovieByGenreId(value?.first.id ?? 0);
-    }).catchError((error) {
-      debugPrint("Genre error: $error");
-    });
-
-    //Local
-    _movieModel.getGenresFromDatabase().then((genreList){
-      setState(() {
-       getGenres = genreList ;
-      });
-    }).catchError((error){
-      debugPrint("Genre DB error: $error");
-    });
-
-    //Network
-   /* _movieModel.getTopRatedMovies().then((value) {
-      //refresh widget
-      debugPrint("Top Rated Response: ${value.toString()}");
-      setState(() {
-        topRatedMovies = value;
-      });
-    }).catchError((error) {
-      debugPrint("Top Rated error: $error");
-    });*/
-    _movieModel.getTopRatedFromDatabase().listen((topRated){
-      setState(() {
-        topRatedMovies = topRated;
-      });
-    }).onError((error){
-      debugPrint("Top Rated DB error: $error");
-    });
-    //Network
-    _movieModel.getActors().then((value) {
-      //refresh widget
-    //  debugPrint("Actor Response: ${value.toString()}");
-      setState(() {
-        actors = value;
-      });
-    }).catchError((error) {
-      debugPrint("Actor error: $error");
-    });
-    //Local
-    _movieModel.getActorsFromDatabase().then((value) {
-      //refresh widget
-     // debugPrint("Actor Response: ${value.toString()}");
-      setState(() {
-       actors = value;
-      });
-    }).catchError((error) {
-      debugPrint("Actor DB error: $error");
-    });
-    super.initState();
-  }
-
-  void _getMovieByGenreId(int genreId) {
-    _movieModel.getMoviesByGenreId(genreId).then((value) {
-      setState(() {
-        moviesByGenre = value;
-      });
-    }).catchError((error) {
-      debugPrint("Movies By  error: $error");
-    });
-  }
-
+class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -169,15 +38,24 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              BannerSection(
-                movieList: getPopularMovies?.take(5).toList(),
+              ScopedModelDescendant<MovieModelImpl>(
+                builder: (BuildContext context,Widget? child,MovieModelImpl model){
+                  return BannerSection(
+                    movieList: model.mPopularMovies?.take(5).toList(),
+                  );
+                },
               ),
               SizedBox(
                 height: MARGIN_LARGE,
               ),
-              BestPopularAndSerialView(
-                onTapMovie: (movieId) => _navigatorPushToMovieDetailScreen(context, movieId),
-                getNowPlayingMovies: getNowPlayingMovies,
+              ScopedModelDescendant<MovieModelImpl>(
+                builder: (BuildContext context,Widget? child,MovieModelImpl model){
+                  return BestPopularAndSerialView(
+                    onTapMovie: (movieId) => _navigatorPushToMovieDetailScreen(context,
+                        movieId,model),
+                    getNowPlayingMovies: model.mNowPlayingMovies,
+                  );
+                },
               ),
               SizedBox(
                 height: MARGIN_LARGE,
@@ -186,29 +64,41 @@ class _HomePageState extends State<HomePage> {
               SizedBox(
                 height: MARGIN_LARGE,
               ),
-              GenreSectionView(
-               onTapMovie: (movieId) => _navigatorPushToMovieDetailScreen(context,movieId) ,
-                genreList: getGenres,
-                movieList: moviesByGenre,
-                onChooseGenre: (genreId) {
-                  if (genreId != null) {
-                    _getMovieByGenreId(genreId);
-                  }
+              ScopedModelDescendant<MovieModelImpl>(
+                builder: (BuildContext context, Widget? child, MovieModelImpl model) {
+                  return GenreSectionView(
+                    onTapMovie: (movieId) => _navigatorPushToMovieDetailScreen(context,movieId,model) ,
+                    genreList: model.mGenresList,
+                    movieList: model.mMoviesByGenre,
+                    onChooseGenre: (genreId) {
+                      if (genreId != null) {
+                        model.getMoviesByGenreId(genreId);
+                      }
+                    },
+                  );
                 },
               ),
               SizedBox(
                 height: MARGIN_LARGE,
               ),
-              ShowCasesSection(
-                topRatedMovies: topRatedMovies,
+              ScopedModelDescendant<MovieModelImpl>(
+                builder: (BuildContext context, Widget? child, MovieModelImpl model) {
+                  return  ShowCasesSection(
+                    topRatedMovies: model.mTopRatedMovies,
+                  );
+                },
               ),
               SizedBox(
                 height: MARGIN_LARGE,
               ),
-              ActorsAndCreatorsSectionView(
-                BEST_ACTOR_TITLE,
-                BEST_ACTOR_SEE_MORE,
-                actorList: actors,
+              ScopedModelDescendant<MovieModelImpl>(
+                builder: (BuildContext context, Widget? child, MovieModelImpl model) {
+                  return ActorsAndCreatorsSectionView(
+                    BEST_ACTOR_TITLE,
+                    BEST_ACTOR_SEE_MORE,
+                    actorList: model.mActors,
+                  );
+                },
               ),
             ],
           ),
@@ -217,20 +107,22 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _navigatorPushToMovieDetailScreen(BuildContext context, int? id) {
+  void _navigatorPushToMovieDetailScreen(BuildContext context, int? id,MovieModelImpl model) {
+    model.getMovieDetails(id ?? 0);
+    model.getMovieDetailFromDatabase(id ?? 0);
+    model.getMovieCredit(id ?? 0);
     if(id !=null){
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => MovieDetailPage(
-            movieId: id,
-          ),
+          builder: (context) => MovieDetailPage(),
         ),
       );
     }
 
   }
 }
+
 
 class GenreSectionView extends StatelessWidget {
   final List<GenreVO>? genreList;
@@ -458,7 +350,8 @@ class _BannerSectionState extends State<BannerSection> {
         ),
         DotsIndicator(
           //widget.movieList?.length ?? 1
-          dotsCount:  widget.movieList?.length ?? 1,
+          dotsCount:  (widget.movieList?.length != null)
+              && widget.movieList!.length > 0 ? widget.movieList!.length : 1,
           position: _position,
           decorator: DotsDecorator(
             color: HOME_SCREEN_BANNER_DOTS_INACTIVE_COLOR,
