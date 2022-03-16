@@ -26,18 +26,19 @@ class MovieDetailPage extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => MovieDetailBloc(movieId ?? 0),
       child: Scaffold(
-        body: Consumer<MovieDetailBloc>(
-          builder: (BuildContext context, bloc, Widget? child) {
+        body: Selector<MovieDetailBloc, MovieVO?>(
+          selector: (context, bloc) => bloc.mMovie,
+          builder: (BuildContext context, mMovie, Widget? child) {
             return Container(
               color: HOME_SCREEN_BACKGROUND_COLOR,
-              child: (bloc.mMovie != null)
+              child: (mMovie != null)
                   ? CustomScrollView(
                       slivers: [
                         MovieDetailsSliverAppView(
                           () {
                             Navigator.pop(context);
                           },
-                          movie: bloc.mMovie,
+                          movie: mMovie,
                         ),
                         SliverList(
                             delegate: SliverChildListDelegate(<Widget>[
@@ -46,20 +47,24 @@ class MovieDetailPage extends StatelessWidget {
                                 vertical: MARGIN_MEDIUM_2,
                                 horizontal: MARGIN_MEDIUM_2),
                             child: TrailerSectionView(
-                              genreList:
-                                  bloc.mMovie?.getGenreAsStringList() ?? [],
-                              storyLine: bloc.mMovie?.overview ?? "",
+                              genreList: mMovie.getGenreAsStringList() ,
+                              storyLine: mMovie.overview ?? "",
                             ),
                           ),
                           SizedBox(
                             height: MARGIN_MEDIUM_2,
                           ),
-                          ActorsAndCreatorsSectionView(
-                            MOVIES_DETAIL_ACTORS_TITLE,
-                            "",
-                            seeMoreButtonVisibility: false,
-                            actorList: bloc.mCast,
-                          ),
+                          Selector<MovieDetailBloc, List<ActorsVO>?>(
+                              selector: (context, bloc) => bloc.mCast,
+                              builder: (BuildContext context, castList,
+                                  Widget? child) {
+                                return ActorsAndCreatorsSectionView(
+                                  MOVIES_DETAIL_ACTORS_TITLE,
+                                  "",
+                                  seeMoreButtonVisibility: false,
+                                  actorList: castList,
+                                );
+                              }),
                           SizedBox(
                             height: MARGIN_MEDIUM_2,
                           ),
@@ -74,51 +79,54 @@ class MovieDetailPage extends StatelessWidget {
                                 ),
                                 AboutFilmInfoView(
                                   "Original Title:",
-                                  bloc.mMovie?.originalTitle ?? "",
+                                  mMovie.originalTitle ?? "",
                                 ),
                                 SizedBox(
                                   height: MARGIN_MEDIUM_2,
                                 ),
                                 AboutFilmInfoView(
                                   "Type:",
-                                  bloc.mMovie
-                                          ?.getGenreSeparatedAsCommonString() ??
-                                      "",
+                                  mMovie.getGenreSeparatedAsCommonString() ,
                                 ),
                                 SizedBox(
                                   height: MARGIN_MEDIUM_2,
                                 ),
                                 AboutFilmInfoView(
                                   "Production:",
-                                  bloc.mMovie
-                                          ?.getProductionCountriesAsString() ??
-                                      "",
+                                  mMovie.getProductionCountriesAsString(),
                                 ),
                                 SizedBox(
                                   height: MARGIN_MEDIUM_2,
                                 ),
                                 AboutFilmInfoView(
                                   "Premiere:",
-                                  bloc.mMovie?.releaseDate ?? "",
+                                  mMovie.releaseDate ?? "",
                                 ),
                                 SizedBox(
                                   height: MARGIN_MEDIUM_2,
                                 ),
-                                AboutFilmInfoView("Description:",
-                                    bloc.mMovie?.overview ?? ""),
+                                AboutFilmInfoView(
+                                    "Description:", mMovie.overview ?? ""),
                               ],
                             ),
                           ),
                           SizedBox(
                             height: MARGIN_MEDIUM_2,
                           ),
-                          (bloc.mCrew != null && bloc.mCrew!.isNotEmpty)
-                              ? ActorsAndCreatorsSectionView(
-                                  MOVIES_DETAIL_CREATORS_TITLE,
-                                  MOVIES_DETAIL_CREATORS_SEE_MORE,
-                                  actorList: bloc.mCrew,
-                                )
-                              : Container(),
+                          Selector<MovieDetailBloc, List<ActorsVO>?>(
+                              selector: (context, bloc) => bloc.mCrew,
+                              builder: (BuildContext context, crewList,
+                                  Widget? child) {
+                                if (crewList != null && crewList.isNotEmpty) {
+                                  return ActorsAndCreatorsSectionView(
+                                    MOVIES_DETAIL_CREATORS_TITLE,
+                                    MOVIES_DETAIL_CREATORS_SEE_MORE,
+                                    actorList: crewList,
+                                  );
+                                } else {
+                                  return Container();
+                                }
+                              }),
                         ]))
                       ],
                     )
