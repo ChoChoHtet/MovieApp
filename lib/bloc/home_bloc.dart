@@ -9,7 +9,6 @@ import '../data/vos/movie_vo.dart';
 
 class HomeBloc {
   // Reactive Stream
-
   StreamController<List<MovieVO>?> mNowPlayingStreamController = StreamController();
   StreamController<List<MovieVO>?> mPopularStreamController = StreamController();
   StreamController<List<GenreVO>?> mGenreListStreamController = StreamController();
