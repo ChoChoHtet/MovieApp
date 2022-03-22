@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:module_3_movies_app/bloc/movie_detail_bloc.dart';
-import 'package:module_3_movies_app/data/%20models/movie_model.dart';
-import 'package:module_3_movies_app/data/%20models/movie_model_impl.dart';
 import 'package:module_3_movies_app/data/vos/actors_vo.dart';
 import 'package:module_3_movies_app/network/api_constants.dart';
 import 'package:module_3_movies_app/resources/colors.dart';
@@ -10,6 +8,7 @@ import 'package:module_3_movies_app/resources/strings.dart';
 import 'package:module_3_movies_app/widgets/actors_and_creators_section_view.dart';
 import 'package:module_3_movies_app/widgets/gradient_view.dart';
 import 'package:module_3_movies_app/widgets/rating_view.dart';
+import 'package:module_3_movies_app/widgets/title_and_horizontal_movie_view.dart';
 import 'package:module_3_movies_app/widgets/title_text.dart';
 import 'package:provider/provider.dart';
 
@@ -47,7 +46,7 @@ class MovieDetailPage extends StatelessWidget {
                                 vertical: MARGIN_MEDIUM_2,
                                 horizontal: MARGIN_MEDIUM_2),
                             child: TrailerSectionView(
-                              genreList: mMovie.getGenreAsStringList() ,
+                              genreList: mMovie.getGenreAsStringList(),
                               storyLine: mMovie.overview ?? "",
                             ),
                           ),
@@ -86,7 +85,7 @@ class MovieDetailPage extends StatelessWidget {
                                 ),
                                 AboutFilmInfoView(
                                   "Type:",
-                                  mMovie.getGenreSeparatedAsCommonString() ,
+                                  mMovie.getGenreSeparatedAsCommonString(),
                                 ),
                                 SizedBox(
                                   height: MARGIN_MEDIUM_2,
@@ -127,6 +126,20 @@ class MovieDetailPage extends StatelessWidget {
                                   return Container();
                                 }
                               }),
+                          SizedBox(
+                            height: MARGIN_MEDIUM_2,
+                          ),
+                          Selector<MovieDetailBloc, List<MovieVO>?>(
+                            selector: (context, bloc) => bloc.movieList,
+                            builder: (builder, movieList, child) =>
+                                TitleAndHorizontalMovieView(
+                              onTapMovie: (movieId) =>
+                                  _navigatorPushToMovieDetailScreen(
+                                      context, movieId),
+                              getNowPlayingMovies: movieList,
+                              title: MOVIES_DETAIL_RELATED_TITLE,
+                            ),
+                          )
                         ]))
                       ],
                     )
@@ -138,6 +151,19 @@ class MovieDetailPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _navigatorPushToMovieDetailScreen(BuildContext context, int? id) {
+    if (id != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MovieDetailPage(
+            movieId: id,
+          ),
+        ),
+      );
+    }
   }
 }
 
