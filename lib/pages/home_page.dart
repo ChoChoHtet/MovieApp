@@ -62,8 +62,12 @@ class HomePage extends StatelessWidget {
                     return TitleAndHorizontalMovieView(
                       onTapMovie: (movieId) =>
                           _navigatorPushToMovieDetailScreen(context, movieId),
-                      getNowPlayingMovies: nowPlayingMovieList,
+                      movieList: nowPlayingMovieList,
                       title: MOVIE_BEST_POPULAR_SERIES_TITLE,
+                      onListEndReached: (){
+                        HomeBloc bloc = Provider.of(context,listen: false);
+                        bloc.getNowPlayingEndReached();
+                      },
                     );
                   },
                 ),
@@ -188,6 +192,9 @@ class GenreSectionView extends StatelessWidget {
           child: HorizontalMoviesList(
             onTapMovie: (movieId) => onTapMovie(movieId),
             movieList: movieList,
+            onListEndReached: (){
+
+            },
           ),
         ),
       ],

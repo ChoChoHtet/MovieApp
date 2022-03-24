@@ -136,8 +136,13 @@ class MovieDetailPage extends StatelessWidget {
                               onTapMovie: (movieId) =>
                                   _navigatorPushToMovieDetailScreen(
                                       context, movieId),
-                              getNowPlayingMovies: movieList,
+                              movieList: movieList,
                               title: MOVIES_DETAIL_RELATED_TITLE,
+                              onListEndReached: () {
+                               /* HomeBloc bloc =
+                                    Provider.of(context, listen: false);
+                                bloc.getNowPlayingEndReached();*/
+                              },
                             ),
                           )
                         ]))

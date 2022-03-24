@@ -1,8 +1,7 @@
-import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 import 'package:module_3_movies_app/data/%20models/movie_model.dart';
 import 'package:module_3_movies_app/data/%20models/movie_model_impl.dart';
+import 'package:module_3_movies_app/network/api_constants.dart';
 
 import '../data/vos/actors_vo.dart';
 import '../data/vos/genre_vo.dart';
@@ -16,13 +15,14 @@ class HomeBloc extends ChangeNotifier {
   List<MovieVO>? mMovieGenre;
   List<GenreVO>? mGenreList;
   List<ActorsVO>? mActorList;
+  int page = 1;
 
   //Model
   MovieModel model = MovieModelImpl();
 
   HomeBloc() {
     // Now playing from DB
-    model.getNowPlayingFromDatabase().listen((nowPlayingMovies) {
+    model.getNowPlayingFromDatabase(MOVIE_PAGE).listen((nowPlayingMovies) {
       mNowPlayingMovie = nowPlayingMovies;
       notifyListeners();
     }).onError((error) {});
@@ -71,7 +71,13 @@ class HomeBloc extends ChangeNotifier {
       notifyListeners();
     }).catchError((error) {});
   }
-  void onTapGenre(int genreId){
+
+  void onTapGenre(int genreId) {
     getMovieByGenreAndRefresh(genreId);
+  }
+
+  void getNowPlayingEndReached() {
+    ++page;
+    model.getNowPlayingMovies(page);
   }
 }

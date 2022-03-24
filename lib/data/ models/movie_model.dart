@@ -4,7 +4,7 @@ import 'package:module_3_movies_app/data/vos/movie_vo.dart';
 
 abstract class MovieModel {
   // Remote
-  void getNowPlayingMovies();
+  void getNowPlayingMovies(int page);
 
   void getPopularMovies();
 
@@ -21,7 +21,7 @@ abstract class MovieModel {
   Future<List<List<ActorsVO>?>> getMovieCredit(int movieId);
 
   // Database
-  Stream<List<MovieVO>?> getNowPlayingFromDatabase();
+  Stream<List<MovieVO>?> getNowPlayingFromDatabase(int page);
 
   Stream<List<MovieVO>?> getPopularFromDatabase();
 

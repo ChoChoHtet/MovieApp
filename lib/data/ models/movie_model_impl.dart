@@ -27,8 +27,8 @@ class MovieModelImpl extends MovieModel {
   }
 
   @override
-  void getNowPlayingMovies() {
-    _dataAgent.getNowPlayingMovies(1).then((movieList) async {
+  void getNowPlayingMovies(int page) {
+    _dataAgent.getNowPlayingMovies(page).then((movieList) async {
       List<MovieVO> nowPlayingMovies = movieList?.map((movie) {
             movie.isNowPlaying = true;
             movie.isPopular = false;
@@ -121,8 +121,8 @@ class MovieModelImpl extends MovieModel {
   }
 
   @override
-  Stream<List<MovieVO>?> getNowPlayingFromDatabase() {
-    getNowPlayingMovies();
+  Stream<List<MovieVO>?> getNowPlayingFromDatabase(int page) {
+    getNowPlayingMovies(page);
     return movieDao
         .getAllMovieEventStream()
         .startWith(movieDao.getNowPlayingMovieStream())
