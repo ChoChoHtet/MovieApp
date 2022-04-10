@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:module_3_movies_app/data/%20models/movie_model.dart';
-import 'package:module_3_movies_app/data/%20models/movie_model_impl.dart';
+import 'package:module_3_movies_app/bloc/movie_detail_bloc.dart';
 import 'package:module_3_movies_app/data/vos/actors_vo.dart';
 import 'package:module_3_movies_app/network/api_constants.dart';
 import 'package:module_3_movies_app/resources/colors.dart';
@@ -9,234 +8,167 @@ import 'package:module_3_movies_app/resources/strings.dart';
 import 'package:module_3_movies_app/widgets/actors_and_creators_section_view.dart';
 import 'package:module_3_movies_app/widgets/gradient_view.dart';
 import 'package:module_3_movies_app/widgets/rating_view.dart';
+import 'package:module_3_movies_app/widgets/title_and_horizontal_movie_view.dart';
 import 'package:module_3_movies_app/widgets/title_text.dart';
+import 'package:provider/provider.dart';
 
 import '../data/vos/movie_vo.dart';
 
 //movie
-class MovieDetailPage extends StatefulWidget {
+class MovieDetailPage extends StatelessWidget {
   final int? movieId;
 
   MovieDetailPage({required this.movieId});
 
   @override
-  State<MovieDetailPage> createState() => _MovieDetailPageState();
-}
-
-class _MovieDetailPageState extends State<MovieDetailPage> {
-  final List<String> genreList = ["Family", "Fantasy", "Adventure"];
-  final MovieModel _movieModel = MovieModelImpl();
-
-  //Model
-  MovieVO? movie;
-  List<ActorsVO>? cast;
-  List<ActorsVO>? crew;
-
-  @override
-  void initState() {
-    //Network
-    _movieModel.getMovieDetails(widget.movieId ?? 0).then((movieDetail) {
-      setState(() {
-        this.movie = movieDetail;
-      });
-    }).catchError((error) {
-      debugPrint("movie detail error: $error");
-    });
-
-    //Local
-    _movieModel.getMovieDetailFromDatabase(widget.movieId ?? 0).then((movieDetail) {
-      setState(() {
-        this.movie = movieDetail ;
-      });
-    }).catchError((error) {
-      debugPrint("movie detail error: $error");
-    });
-    _movieModel.getMovieCredit(widget.movieId ?? 0).then((movieCredit) {
-      setState(() {
-        this.cast = movieCredit.first;
-        this.crew = movieCredit.last;
-      });
-    }).catchError((error) {
-      debugPrint("movie credit error: $error");
-    });
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        color: HOME_SCREEN_BACKGROUND_COLOR,
-        // child: NestedScrollView(
-        //   headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-        //     return <Widget>[
-        //       MovieDetailsSliverAppView(() {
-        //         Navigator.pop(context);
-        //       }),
-        //       SliverList(
-        //           delegate: SliverChildListDelegate(<Widget>[
-        //             Container(
-        //               padding: const EdgeInsets.symmetric(
-        //                   vertical: MARGIN_MEDIUM_2,
-        //                   horizontal: MARGIN_MEDIUM_2),
-        //               child: TrailerSectionView(genreList),
-        //             ),
-        //             SizedBox(
-        //               height: MARGIN_MEDIUM_2,
-        //             ),
-        //             ActorsAndCreatorsSectionView(
-        //               MOVIES_DETAIL_ACTORS_TITLE,
-        //               "",
-        //               seeMoreButtonVisibility: false,
-        //             ),
-        //             SizedBox(
-        //               height: MARGIN_MEDIUM_2,
-        //             ),
-        //             Container(
-        //               padding: EdgeInsets.all(MARGIN_MEDIUM_2),
-        //               child: Column(
-        //                 crossAxisAlignment: CrossAxisAlignment.start,
-        //                 children: [
-        //                   TitleText("ABOUT FILM"),
-        //                   SizedBox(
-        //                     height: MARGIN_MEDIUM_2,
-        //                   ),
-        //                   AboutFilmInfoView(
-        //                     "Original Title:",
-        //                     "Fantastic Beasts and Where to find them",
-        //                   ),
-        //                   SizedBox(
-        //                     height: MARGIN_MEDIUM_2,
-        //                   ),
-        //                   AboutFilmInfoView(
-        //                     "Type:",
-        //                     "Family,Fantasy, Adventure",
-        //                   ),
-        //                   SizedBox(
-        //                     height: MARGIN_MEDIUM_2,
-        //                   ),
-        //                   AboutFilmInfoView(
-        //                     "Production:",
-        //                     "United Kingdom, USA",
-        //                   ),
-        //                   SizedBox(
-        //                     height: MARGIN_MEDIUM_2,
-        //                   ),
-        //                   AboutFilmInfoView(
-        //                     "Premiere:",
-        //                     "8 November 2016 ( World)",
-        //                   ),
-        //                   SizedBox(
-        //                     height: MARGIN_MEDIUM_2,
-        //                   ),
-        //                   AboutFilmInfoView(
-        //                     "Description:",
-        //                     "Arriving in New York for a brief stopover, he might have come and gone without incident, were it not for a No-Maj (American for Muggle) named Jacob, a misplaced magical case, and the escape of some of Newt's fantastic beasts, which could spell trouble for both the wizarding and No-Maj worlds.",
-        //                   ),
-        //                 ],
-        //               ),
-        //             ),
-        //             SizedBox(
-        //               height: MARGIN_MEDIUM_2,
-        //             ),
-        //             ActorsAndCreatorsSectionView(
-        //               MOVIES_DETAIL_CREATORS_TITLE,
-        //               MOVIES_DETAIL_CREATORS_SEE_MORE,
-        //             ),
-        //           ]))
-        //     ];
-        //   },
-        //   body: Center(
-        //     child: Text("title"),
-        //   ),
-        // ),
-        child: CustomScrollView(
-          slivers: [
-            MovieDetailsSliverAppView(
-              () {
-                Navigator.pop(context);
-              },
-              movie: movie,
-            ),
-            SliverList(
-                delegate: SliverChildListDelegate(<Widget>[
-              Container(
-                padding: const EdgeInsets.symmetric(
-                    vertical: MARGIN_MEDIUM_2, horizontal: MARGIN_MEDIUM_2),
-                child: TrailerSectionView(
-                  genreList: movie?.getGenreAsStringList() ?? [],
-                  storyLine: movie?.overview ?? "",
-                ),
-              ),
-              SizedBox(
-                height: MARGIN_MEDIUM_2,
-              ),
-              ActorsAndCreatorsSectionView(
-                MOVIES_DETAIL_ACTORS_TITLE,
-                "",
-                seeMoreButtonVisibility: false,
-                actorList: this.cast,
-              ),
-              SizedBox(
-                height: MARGIN_MEDIUM_2,
-              ),
-              Container(
-                padding: EdgeInsets.all(MARGIN_MEDIUM_2),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TitleText("ABOUT FILM"),
-                    SizedBox(
-                      height: MARGIN_MEDIUM_2,
+    return ChangeNotifierProvider(
+      create: (context) => MovieDetailBloc(movieId ?? 0),
+      child: Scaffold(
+        body: Selector<MovieDetailBloc, MovieVO?>(
+          selector: (context, bloc) => bloc.mMovie,
+          builder: (BuildContext context, mMovie, Widget? child) {
+            return Container(
+              color: HOME_SCREEN_BACKGROUND_COLOR,
+              child: (mMovie != null)
+                  ? CustomScrollView(
+                      slivers: [
+                        MovieDetailsSliverAppView(
+                          () {
+                            Navigator.pop(context);
+                          },
+                          movie: mMovie,
+                        ),
+                        SliverList(
+                            delegate: SliverChildListDelegate(<Widget>[
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: MARGIN_MEDIUM_2,
+                                horizontal: MARGIN_MEDIUM_2),
+                            child: TrailerSectionView(
+                              genreList: mMovie.getGenreAsStringList(),
+                              storyLine: mMovie.overview ?? "",
+                            ),
+                          ),
+                          SizedBox(
+                            height: MARGIN_MEDIUM_2,
+                          ),
+                          Selector<MovieDetailBloc, List<ActorsVO>?>(
+                              selector: (context, bloc) => bloc.mCast,
+                              builder: (BuildContext context, castList,
+                                  Widget? child) {
+                                return ActorsAndCreatorsSectionView(
+                                  MOVIES_DETAIL_ACTORS_TITLE,
+                                  "",
+                                  seeMoreButtonVisibility: false,
+                                  actorList: castList,
+                                );
+                              }),
+                          SizedBox(
+                            height: MARGIN_MEDIUM_2,
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(MARGIN_MEDIUM_2),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TitleText("ABOUT FILM"),
+                                SizedBox(
+                                  height: MARGIN_MEDIUM_2,
+                                ),
+                                AboutFilmInfoView(
+                                  "Original Title:",
+                                  mMovie.originalTitle ?? "",
+                                ),
+                                SizedBox(
+                                  height: MARGIN_MEDIUM_2,
+                                ),
+                                AboutFilmInfoView(
+                                  "Type:",
+                                  mMovie.getGenreSeparatedAsCommonString(),
+                                ),
+                                SizedBox(
+                                  height: MARGIN_MEDIUM_2,
+                                ),
+                                AboutFilmInfoView(
+                                  "Production:",
+                                  mMovie.getProductionCountriesAsString(),
+                                ),
+                                SizedBox(
+                                  height: MARGIN_MEDIUM_2,
+                                ),
+                                AboutFilmInfoView(
+                                  "Premiere:",
+                                  mMovie.releaseDate ?? "",
+                                ),
+                                SizedBox(
+                                  height: MARGIN_MEDIUM_2,
+                                ),
+                                AboutFilmInfoView(
+                                    "Description:", mMovie.overview ?? ""),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: MARGIN_MEDIUM_2,
+                          ),
+                          Selector<MovieDetailBloc, List<ActorsVO>?>(
+                              selector: (context, bloc) => bloc.mCrew,
+                              builder: (BuildContext context, crewList,
+                                  Widget? child) {
+                                if (crewList != null && crewList.isNotEmpty) {
+                                  return ActorsAndCreatorsSectionView(
+                                    MOVIES_DETAIL_CREATORS_TITLE,
+                                    MOVIES_DETAIL_CREATORS_SEE_MORE,
+                                    actorList: crewList,
+                                  );
+                                } else {
+                                  return Container();
+                                }
+                              }),
+                          SizedBox(
+                            height: MARGIN_MEDIUM_2,
+                          ),
+                          Selector<MovieDetailBloc, List<MovieVO>?>(
+                            selector: (context, bloc) => bloc.movieList,
+                            builder: (builder, movieList, child) =>
+                                TitleAndHorizontalMovieView(
+                              onTapMovie: (movieId) =>
+                                  _navigatorPushToMovieDetailScreen(
+                                      context, movieId),
+                              movieList: movieList,
+                              title: MOVIES_DETAIL_RELATED_TITLE,
+                              onListEndReached: () {
+                               /* HomeBloc bloc =
+                                    Provider.of(context, listen: false);
+                                bloc.getNowPlayingEndReached();*/
+                              },
+                            ),
+                          )
+                        ]))
+                      ],
+                    )
+                  : Center(
+                      child: CircularProgressIndicator(),
                     ),
-                    AboutFilmInfoView(
-                      "Original Title:",
-                     movie?.originalTitle ?? "",
-                    ),
-                    SizedBox(
-                      height: MARGIN_MEDIUM_2,
-                    ),
-                    AboutFilmInfoView(
-                      "Type:",
-                      movie?.getGenreSeparatedAsCommonString() ?? "",
-                    ),
-                    SizedBox(
-                      height: MARGIN_MEDIUM_2,
-                    ),
-                    AboutFilmInfoView(
-                      "Production:",
-                    movie?.getProductionCountriesAsString() ?? "",
-                    ),
-                    SizedBox(
-                      height: MARGIN_MEDIUM_2,
-                    ),
-                    AboutFilmInfoView(
-                      "Premiere:",
-                     movie?.releaseDate ?? "",
-                    ),
-                    SizedBox(
-                      height: MARGIN_MEDIUM_2,
-                    ),
-                    AboutFilmInfoView(
-                      "Description:",
-                      movie?.overview ?? ""
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: MARGIN_MEDIUM_2,
-              ),
-              ActorsAndCreatorsSectionView(
-                MOVIES_DETAIL_CREATORS_TITLE,
-                MOVIES_DETAIL_CREATORS_SEE_MORE,
-                actorList: this.crew,
-              ),
-            ]))
-          ],
+            );
+          },
         ),
       ),
     );
+  }
+
+  void _navigatorPushToMovieDetailScreen(BuildContext context, int? id) {
+    if (id != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MovieDetailPage(
+            movieId: id,
+          ),
+        ),
+      );
+    }
   }
 }
 
@@ -429,12 +361,12 @@ class MoviesTimeAndGenreView extends StatelessWidget {
         SizedBox(
           width: MARGIN_MEDIUM_2,
         ),
-       //combine with wrap using spread operations
-       ...genreList
-           .map(
-             (genre) => GenreChipView(genre),
-       )
-           .toList(),
+        //combine with wrap using spread operations
+        ...genreList
+            .map(
+              (genre) => GenreChipView(genre),
+            )
+            .toList(),
         SizedBox(
           width: MARGIN_MEDIUM_2,
         ),

@@ -2,12 +2,12 @@ import 'package:hive/hive.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:module_3_movies_app/data/vos/movie_vo.dart';
 import 'package:module_3_movies_app/persistence/hive_constants.dart';
+
 part 'actors_vo.g.dart';
 
 @JsonSerializable()
-@HiveType(typeId: HIVE_TYPE_ID_ACTOR_VO,adapterName: "ActorsVOAdapter")
-class
-ActorsVO {
+@HiveType(typeId: HIVE_TYPE_ID_ACTOR_VO, adapterName: "ActorsVOAdapter")
+class ActorsVO {
   @JsonKey(name: "adult")
   @HiveField(0)
   bool? adult;
@@ -60,9 +60,8 @@ ActorsVO {
   @HiveField(12)
   List<MovieVO>? knownFor;
 
-
   ActorsVO(
-      this.adult,
+      {this.adult,
       this.gender,
       this.knownForDepartment,
       this.id,
@@ -74,9 +73,28 @@ ActorsVO {
       this.character,
       this.creditId,
       this.order,
-      this.knownFor);
+      this.knownFor});
 
-  factory ActorsVO.fromJson( Map<String,dynamic> json) => _$ActorsVOFromJson(json);
+  @override
+  String toString() {
+    return 'ActorsVO{adult: $adult, gender: $gender, knownForDepartment: $knownForDepartment, id: $id, name: $name, originalName: $originalName, popularity: $popularity, castId: $castId, profilePath: $profilePath, character: $character, creditId: $creditId, order: $order, knownFor: $knownFor}';
+  }
 
-  Map<String,dynamic> toJson() => _$ActorsVOToJson(this);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ActorsVO &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          originalName == other.originalName &&
+          creditId == other.creditId;
+
+  @override
+  int get hashCode => id.hashCode ^ originalName.hashCode ^ creditId.hashCode;
+
+  factory ActorsVO.fromJson(Map<String, dynamic> json) =>
+      _$ActorsVOFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ActorsVOToJson(this);
 }

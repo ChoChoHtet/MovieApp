@@ -3,34 +3,26 @@ import 'package:module_3_movies_app/persistence/hive_constants.dart';
 
 import '../../data/vos/movie_vo.dart';
 
-class MovieDao {
-  static final MovieDao _singleton = MovieDao._internal();
+abstract class MovieDao {
+  void saveAllMovies(List<MovieVO> movieList);
 
-  MovieDao._internal();
+  void saveSingleMovie(MovieVO movie);
 
-  factory MovieDao() {
-    return _singleton;
-  }
+  List<MovieVO> getAllMovies();
 
-  void saveAllMovies(List<MovieVO> movieList) async {
-    Map<int, MovieVO> movieMap = Map.fromIterable(movieList,
-        key: (movie) => movie.id, value: (movie) => movie);
-    await getMovieBox().putAll(movieMap);
-  }
+  MovieVO? getMoviesById(int movieId);
 
-  void saveSingleMovie(MovieVO movie) {
-    getMovieBox().put(movie.id, movie);
-  }
+  Stream<void> getAllMovieEventStream();
 
-  List<MovieVO> getAllMovies() {
-    return getMovieBox().values.toList();
-  }
+  Stream<List<MovieVO>> getPopularMovieStream();
 
-  MovieVO? getMoviesById(int movieId) {
-    return getMovieBox().get(movieId);
-  }
+  Stream<List<MovieVO>> getNowPlayingMovieStream();
 
-  Box<MovieVO> getMovieBox() {
-    return Hive.box(BOX_NAMES_MOVIE_VO);
-  }
+  Stream<List<MovieVO>> getTopRatedMovieStream();
+
+  List<MovieVO> getPopularMovies();
+
+  List<MovieVO> getTopRatedMovies();
+
+  List<MovieVO> getNowPlayingMovies();
 }

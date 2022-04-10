@@ -17,19 +17,19 @@ class ActorsVOAdapter extends TypeAdapter<ActorsVO> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return ActorsVO(
-      fields[0] as bool?,
-      fields[1] as int?,
-      fields[2] as String?,
-      fields[3] as int?,
-      fields[4] as String?,
-      fields[5] as String?,
-      fields[6] as double?,
-      fields[7] as int?,
-      fields[8] as String?,
-      fields[9] as String?,
-      fields[10] as String?,
-      fields[11] as int?,
-      (fields[12] as List?)?.cast<MovieVO>(),
+      adult: fields[0] as bool?,
+      gender: fields[1] as int?,
+      knownForDepartment: fields[2] as String?,
+      id: fields[3] as int?,
+      name: fields[4] as String?,
+      originalName: fields[5] as String?,
+      popularity: fields[6] as double?,
+      castId: fields[7] as int?,
+      profilePath: fields[8] as String?,
+      character: fields[9] as String?,
+      creditId: fields[10] as String?,
+      order: fields[11] as int?,
+      knownFor: (fields[12] as List?)?.cast<MovieVO>(),
     );
   }
 
@@ -81,19 +81,19 @@ class ActorsVOAdapter extends TypeAdapter<ActorsVO> {
 // **************************************************************************
 
 ActorsVO _$ActorsVOFromJson(Map<String, dynamic> json) => ActorsVO(
-      json['adult'] as bool?,
-      json['gender'] as int?,
-      json['known_for_department'] as String?,
-      json['id'] as int?,
-      json['name'] as String?,
-      json['original_name'] as String?,
-      (json['popularity'] as num?)?.toDouble(),
-      json['cast_id'] as int?,
-      json['profile_path'] as String?,
-      json['character'] as String?,
-      json['credit_id'] as String?,
-      json['order'] as int?,
-      (json['known_for'] as List<dynamic>?)
+      adult: json['adult'] as bool?,
+      gender: json['gender'] as int?,
+      knownForDepartment: json['known_for_department'] as String?,
+      id: json['id'] as int?,
+      name: json['name'] as String?,
+      originalName: json['original_name'] as String?,
+      popularity: (json['popularity'] as num?)?.toDouble(),
+      castId: json['cast_id'] as int?,
+      profilePath: json['profile_path'] as String?,
+      character: json['character'] as String?,
+      creditId: json['credit_id'] as String?,
+      order: json['order'] as int?,
+      knownFor: (json['known_for'] as List<dynamic>?)
           ?.map((e) => MovieVO.fromJson(e as Map<String, dynamic>))
           .toList(),
     );

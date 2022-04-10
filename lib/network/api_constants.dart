@@ -24,3 +24,4 @@ const PARAM_GENRE_ID="genre_id";
 //constants values
 const API_KEY="9afbddf61969d33a884db820683ded9e";
 const LANGUAGE_EN_US="en-US";
+const MOVIE_PAGE = 1;
