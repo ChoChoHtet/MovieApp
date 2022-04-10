@@ -3,82 +3,26 @@ import 'package:module_3_movies_app/persistence/hive_constants.dart';
 
 import '../../data/vos/movie_vo.dart';
 
-class MovieDao {
-  static final MovieDao _singleton = MovieDao._internal();
+abstract class MovieDao {
+  void saveAllMovies(List<MovieVO> movieList);
 
-  MovieDao._internal();
+  void saveSingleMovie(MovieVO movie);
 
-  factory MovieDao() {
-    return _singleton;
-  }
+  List<MovieVO> getAllMovies();
 
-  void saveAllMovies(List<MovieVO> movieList) async {
-    Map<int, MovieVO> movieMap = Map.fromIterable(movieList,
-        key: (movie) => movie.id, value: (movie) => movie);
-    await getMovieBox().putAll(movieMap);
-  }
+  MovieVO? getMoviesById(int movieId);
 
-  void saveSingleMovie(MovieVO movie) {
-    getMovieBox().put(movie.id, movie);
-  }
+  Stream<void> getAllMovieEventStream();
 
-  List<MovieVO> getAllMovies() {
-    return getMovieBox().values.toList();
-  }
+  Stream<List<MovieVO>> getPopularMovieStream();
 
-  MovieVO? getMoviesById(int movieId) {
-    return getMovieBox().get(movieId);
-  }
+  Stream<List<MovieVO>> getNowPlayingMovieStream();
 
-  Box<MovieVO> getMovieBox() {
-    return Hive.box(BOX_NAMES_MOVIE_VO);
-  }
+  Stream<List<MovieVO>> getTopRatedMovieStream();
 
-  /// Reactive Programming
+  List<MovieVO> getPopularMovies();
 
-  Stream<void> getAllMovieEventStream(){
-    return getMovieBox().watch();
-  }
-  Stream<List<MovieVO>> getPopularMovieStream() {
-    return Stream.value(getAllMovies()
-       // .where((element) => element.isPopular ?? false)
-        .toList());
-  }
+  List<MovieVO> getTopRatedMovies();
 
-  Stream<List<MovieVO>> getNowPlayingMovieStream() {
-    return Stream.value(getAllMovies()
-        //.where((element) => element.isNowPlaying ?? false)
-        .toList());
-  }
-  Stream<List<MovieVO>> getTopRatedMovieStream() {
-    return Stream.value(getAllMovies()
-       // .where((element) => element.isTopRated ?? false)
-        .toList());
-  }
-
-  List<MovieVO> getPopularMovies() {
-    if( getAllMovies().isNotEmpty){
-      return getAllMovies()
-          .where((element) => element.isPopular ?? false).toList();
-    }else{
-      return [];
-    }
-  }
-
-  List<MovieVO> getTopRatedMovies() {
-    if( getAllMovies().isNotEmpty){
-      return getAllMovies()
-          .where((element) => element.isTopRated ?? false).toList();
-    }else{
-      return [];
-    }
-  }
-  List<MovieVO> getNowPlayingMovies() {
-    if( getAllMovies().isNotEmpty){
-      return getAllMovies()
-          .where((element) => element.isNowPlaying ?? false).toList();
-    }else{
-      return [];
-    }
-  }
+  List<MovieVO> getNowPlayingMovies();
 }

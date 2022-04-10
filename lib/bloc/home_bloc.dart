@@ -20,10 +20,17 @@ class HomeBloc extends ChangeNotifier {
   //Model
   MovieModel model = MovieModelImpl();
 
-  HomeBloc() {
+  HomeBloc([MovieModel? movieModelImpl]) {
+    //Only for testing
+    if(movieModelImpl != null){
+      model = movieModelImpl ;
+    }
     // Now playing from DB
     model.getNowPlayingFromDatabase(MOVIE_PAGE).listen((nowPlayingMovies) {
       mNowPlayingMovie = nowPlayingMovies;
+      if(nowPlayingMovies?.isNotEmpty ?? false){
+        nowPlayingMovies?.sort((a, b) => a.id!- b.id!);
+      }
       notifyListeners();
     }).onError((error) {});
 
@@ -49,6 +56,10 @@ class HomeBloc extends ChangeNotifier {
     // Genre from DB
     model.getGenresFromDatabase().then((genres) {
       mGenreList = genres;
+
+      if(mGenreList?.isNotEmpty ??false){
+        getMovieByGenreAndRefresh(mGenreList?.first.id ?? 0);
+      }
       notifyListeners();
     }).catchError((error) {});
 

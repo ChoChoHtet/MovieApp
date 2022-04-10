@@ -126,7 +126,8 @@ class MovieVO {
   bool? isPopular;
 
 
-  MovieVO(this.adult,
+  MovieVO(
+  {this.adult,
       this.backDropPath,
       this.belongToCollection,
       this.budget,
@@ -151,7 +152,10 @@ class MovieVO {
       this.title,
       this.video,
       this.voteAverage,
-      this.voteCount) ;
+      this.voteCount,
+      this.isNowPlaying,
+      this.isTopRated,
+      this.isPopular});
 
   List<String> getGenreAsStringList () {
     return this.genres?.map((genre) => genre.name ?? "").toList()  ?? [];
@@ -166,11 +170,22 @@ class MovieVO {
   }
 
 
-
   factory MovieVO.fromJson(Map<String, dynamic> json) =>
       _$MovieVOFromJson(json);
 
   Map<String, dynamic> toJson() => _$MovieVOToJson(this);
+
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MovieVO &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          title == other.title;
+
+  @override
+  int get hashCode => id.hashCode ^ title.hashCode;
 
   @override
   String toString() {

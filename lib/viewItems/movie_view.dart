@@ -18,10 +18,6 @@ class MovieView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // GestureDetector(
-              //   onTap:(){
-              //    onTapMovie();
-              //   },
                  Image.network(
                 "$IMAGES_BASE_URL${movie?.posterPath ?? ""}",
                   fit: BoxFit.cover,

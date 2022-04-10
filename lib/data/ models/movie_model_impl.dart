@@ -3,11 +3,13 @@ import 'package:module_3_movies_app/data/%20models/movie_model.dart';
 import 'package:module_3_movies_app/data/vos/actors_vo.dart';
 import 'package:module_3_movies_app/data/vos/genre_vo.dart';
 import 'package:module_3_movies_app/data/vos/movie_vo.dart';
-import 'package:module_3_movies_app/network/dataagents/dio_movie_data_agent_impl.dart';
 import 'package:module_3_movies_app/network/dataagents/movie_data_agent.dart';
 import 'package:module_3_movies_app/network/dataagents/retrofit_data_agent_impl.dart';
 import 'package:module_3_movies_app/persistence/daos/actor_dao.dart';
 import 'package:module_3_movies_app/persistence/daos/genre_dao.dart';
+import 'package:module_3_movies_app/persistence/daos/impl/actor_dao_impl.dart';
+import 'package:module_3_movies_app/persistence/daos/impl/genre_dao_impl.dart';
+import 'package:module_3_movies_app/persistence/daos/impl/movie_dao_impl.dart';
 import 'package:module_3_movies_app/persistence/daos/movie_dao.dart';
 import 'package:stream_transform/stream_transform.dart';
 
@@ -18,9 +20,23 @@ class MovieModelImpl extends MovieModel {
 
   static MovieModelImpl _singleton = MovieModelImpl._internal();
 
-  MovieDao movieDao = MovieDao();
-  GenreDao genreDao = GenreDao();
-  ActorDao actorDao = ActorDao();
+  MovieDao mMovieDao = MovieDaoImpl();
+  GenreDao mGenreDao = GenreDaoImpl();
+  ActorDao mActorDao = ActorDaoImpl();
+
+  /// Only For Test
+  @visibleForTesting
+  void setDaoAndAgentTest(
+      MovieDao movieDao,
+      GenreDao genreDao,
+      ActorDao actorDao,
+      MovieDataAgent dataAgent
+      ){
+    mMovieDao = movieDao ;
+    mActorDao = actorDao;
+    mGenreDao = genreDao;
+    _dataAgent = dataAgent;
+  }
 
   factory MovieModelImpl() {
     return _singleton;
@@ -36,7 +52,7 @@ class MovieModelImpl extends MovieModel {
             return movie;
           }).toList() ??
           [];
-      movieDao.saveAllMovies(nowPlayingMovies);
+      mMovieDao.saveAllMovies(nowPlayingMovies);
       debugPrint("Now Playing: ${movieList.toString()}");
      // return Future.value(movieList);
     });
@@ -52,7 +68,7 @@ class MovieModelImpl extends MovieModel {
             return movie;
           }).toList() ??
           [];
-      movieDao.saveAllMovies(popularMovies);
+      mMovieDao.saveAllMovies(popularMovies);
       //return Future.value(movieList);
     });
   }
@@ -67,7 +83,7 @@ class MovieModelImpl extends MovieModel {
             return movie;
           }).toList() ??
           [];
-      movieDao.saveAllMovies(topRatedMovies);
+      mMovieDao.saveAllMovies(topRatedMovies);
      // return Future.value(movieList);
     });
   }
@@ -76,7 +92,7 @@ class MovieModelImpl extends MovieModel {
   Future<List<ActorsVO>?> getActors() {
     // return _dataAgent.getActors(1);
     return _dataAgent.getActors(1).then((actorList) async {
-      actorDao.saveAllActors(actorList ?? []);
+      mActorDao.saveAllActors(actorList ?? []);
       return Future.value(actorList);
     });
   }
@@ -84,7 +100,7 @@ class MovieModelImpl extends MovieModel {
   @override
   Future<List<GenreVO>?> getGenres() {
     return _dataAgent.getGenres().then((genreList) async {
-      genreDao.saveAllGenres(genreList ?? []);
+      mGenreDao.saveAllGenres(genreList ?? []);
       return Future.value(genreList);
     });
   }
@@ -103,7 +119,7 @@ class MovieModelImpl extends MovieModel {
   Future<MovieVO?> getMovieDetails(int movieId) {
     return _dataAgent.getMovieDetails(movieId).then((movie) async {
       if (movie != null) {
-        movieDao.saveSingleMovie(movie);
+        mMovieDao.saveSingleMovie(movie);
       }
       return Future.value(movie);
     });
@@ -112,43 +128,44 @@ class MovieModelImpl extends MovieModel {
   //Database
   @override
   Future<List<ActorsVO>?> getActorsFromDatabase() {
-    return Future.value(actorDao.getAllActors());
+    debugPrint("actor list: ${mActorDao.getAllActors()}");
+    return Future.value(mActorDao.getAllActors());
   }
 
   @override
   Future<List<GenreVO>?> getGenresFromDatabase() {
-    return Future.value(genreDao.getAllGenres());
+    return Future.value(mGenreDao.getAllGenres());
   }
 
   @override
   Stream<List<MovieVO>?> getNowPlayingFromDatabase(int page) {
     getNowPlayingMovies(page);
-    return movieDao
+    return mMovieDao
         .getAllMovieEventStream()
-        .startWith(movieDao.getNowPlayingMovieStream())
-        .map((event) => movieDao.getNowPlayingMovies());
+        .startWith(mMovieDao.getNowPlayingMovieStream())
+        .map((event) => mMovieDao.getNowPlayingMovies());
   }
 
   @override
  Stream<List<MovieVO>?> getPopularFromDatabase() {
     getPopularMovies();
-    return movieDao
+    return mMovieDao
         .getAllMovieEventStream()
-        .startWith(movieDao.getPopularMovieStream())
-        .map((event) => movieDao.getPopularMovies());
+        .startWith(mMovieDao.getPopularMovieStream())
+        .map((event) => mMovieDao.getPopularMovies());
   }
 
   @override
   Stream<List<MovieVO>?> getTopRatedFromDatabase() {
     getTopRatedMovies();
-    return movieDao
+    return mMovieDao
         .getAllMovieEventStream()
-        .startWith(movieDao.getTopRatedMovieStream())
-        .map((event) => movieDao.getTopRatedMovies());
+        .startWith(mMovieDao.getTopRatedMovieStream())
+        .map((event) => mMovieDao.getTopRatedMovies());
   }
 
   @override
   Future<MovieVO?> getMovieDetailFromDatabase(int movieId) {
-    return Future.value(movieDao.getMoviesById(movieId));
+    return Future.value(mMovieDao.getMoviesById(movieId));
   }
 }
