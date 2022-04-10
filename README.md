@@ -1,17 +1,18 @@
-# module_3_movies_app
+# Flutter Movie App
 
 Movies app
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Movie App is one of Flutter practice App.
 
-A few resources to get you started if this is your first Flutter project:
+Support Library
+- flutter_rating_bar: ^4.0.0
+- dots_indicator: ^2.1.0
+- hive: ^2.0.5
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+UI.
+![movie_app](https://user-images.githubusercontent.com/44867640/162599935-b130089e-5a62-405c-8b3e-371ef7e4e388.png)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-"# MovieApp" 
+
+
